@@ -1,0 +1,32 @@
+# Watches the upstream council feed, not our deployment.
+#
+# The dashboard reads the official API directly from the browser, so there is
+# no snapshot of ours that can go stale. What can go wrong is upstream: the
+# feed stops publishing, or the share of live sensors collapses. This job
+# notices that before a user does.
+name: Check source health
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: '23 */6 * * *'
+
+jobs:
+  probe:
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Probe the council feed
+        run: npm run probe:freshness

@@ -1,0 +1,65 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  html {
+    color-scheme: dark;
+  }
+
+  body {
+    @apply bg-ink-950 text-slate-100 antialiased;
+    font-feature-settings: 'tnum' 1;
+  }
+
+  /* Tabular figures everywhere a number can change under the reader. */
+  .tnum {
+    font-variant-numeric: tabular-nums;
+  }
+}
+
+@layer components {
+  .card {
+    @apply rounded-xl border border-white/10 bg-ink-900/80 p-4 shadow-lg shadow-black/20;
+  }
+
+  .chip {
+    @apply inline-flex items-center gap-1.5 rounded-full px-2.5 py-1 text-xs font-medium;
+  }
+}
+
+/* Leaflet sits on a light canvas by default; tone it to the dashboard ground. */
+.leaflet-container {
+  background: #0a1220;
+  font-family: inherit;
+}
+
+/*
+ * Darken the OSM basemap in the browser so the map reads as part of the
+ * dashboard. The filter applies to the tile layer only — the vector markers
+ * are drawn in their own pane and keep their true semantic colours.
+ *
+ * Saturation is crushed almost to grey on purpose. On this map green means
+ * "bays are free"; a green park underneath a green marker is decoration
+ * competing with data. Colour belongs to the readings, not the basemap.
+ */
+.basemap-tiles {
+  filter: invert(1) hue-rotate(185deg) brightness(0.78) contrast(0.85) saturate(0.12);
+}
+
+.leaflet-popup-content-wrapper,
+.leaflet-popup-tip {
+  background: #16263d;
+  color: #e2e8f0;
+  border-radius: 0.6rem;
+}
+
+.leaflet-bar a {
+  background: #16263d;
+  color: #e2e8f0;
+  border-bottom-color: rgba(255, 255, 255, 0.1);
+}
+
+.leaflet-bar a:hover {
+  background: #1f3352;
+}
