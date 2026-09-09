@@ -1,79 +1,81 @@
-# 產品使命與路線圖
+# Product Mission and Roadmap
 
-最後研究更新：2026-09-08（Australia/Melbourne）
+**English** · [繁體中文](PRODUCT.zh-TW.md)
+
+Research last updated: 2026-09-08 (Australia/Melbourne)
 
 ## Mission
 
-讓一個正開車前往墨爾本市中心的人，在 10 秒內可信地回答三件事：
+Someone driving into central Melbourne should be able to answer three things within ten seconds, and trust the answers:
 
-1. 這筆資料是不是最新、有多舊？
-2. 現在哪一條街真的還有位子？
-3. 這個數字有多少是我可以依賴的？
+1. Is this data current, and how old is it?
+2. Which street actually has space right now?
+3. How much of that number can I rely on?
 
-如果資料不足以回答，產品必須明白說「目前無法確認」，不得用 sample、抓取時間或快取時間製造即時感。
+Where the data cannot answer, the product must say plainly that it cannot confirm — never manufacture a sense of currency out of sample data, fetch time or cache time.
 
-## 為什麼值得存在
+## Why this exists
 
-City of Melbourne 是 source of truth，而且已經把感測器資料完整開放。既有的停車 app 也早就能畫出地圖上的點。因此本產品的差異化不是「另一張地圖」，而是：
+The City of Melbourne is the source of truth and already publishes its sensor data in full. Existing parking apps have long been able to draw dots on a map. So the differentiator is not another map:
 
-**它會扣掉不該算的東西，並告訴你扣了多少。**
+**It subtracts what should not be counted, and tells you how much it subtracted.**
 
-議會的 feed 裡有 963 個已經數月至數年沒回報的感測器，但它們仍帶著最後一次的狀態留在資料裡。任何直接計數的看板都會宣稱有 4,370 個空位；實際可信的是 3,922 個。**虛報 448 個，高估 11.4%。**
+The council's feed contains 963 sensors that have not reported in months to years, yet still carry their last known state. Any dashboard that counts records directly will claim 4,370 free bays. Only 3,922 are defensible. **448 phantom bays — an 11.4% overstatement.**
 
-這不是理論上的瑕疵。它的具體後果是：使用者開去一條被告知有位子的街，發現沒有，然後繞第二圈。
+This is not a theoretical flaw. Its concrete consequence is a driver heading for a street they were told had space, finding none, and going around the block again.
 
-## 已驗證的產品事實
+## Verified product facts
 
-全部為 2026-09-08 對真實 feed 的實測，證據見 [`docs/DATA_TRUST_CONTRACT.md`](docs/DATA_TRUST_CONTRACT.md)：
+All measured against the live feed on 2026-09-08. Evidence in [`docs/DATA_TRUST_CONTRACT.md`](docs/DATA_TRUST_CONTRACT.md):
 
-- 6,324 個車位感測器中，963 個（15.2%）已數月至數年未回報，最舊停在 2022-09-13。
-- 622 個有標誌牌的 zone 中，212 個（34.1%）帶有多重限制代碼；`MP2P / LZ30` 是最常見的組合。顯示其中任一個，都會在另一個適用的時段給出可能導致罰單的答案。
-- 583 個車位（9.2%）無法對應到街道名稱。
-- catalog metadata 的 `modified` 與資料實際新鮮度無關：另一個資料集 metadata 顯示 6 天前更新，最新記錄卻是一年前。
-- feed 約每 2 分鐘發布，開放 CORS、免 API key、每 IP 每日 10,000 次額度。瀏覽器可直連。
+- Of 6,324 bay sensors, 963 (15.2%) have not reported in months to years; the oldest is stuck at 2022-09-13.
+- Of the 622 zones carrying signage, 212 (34.1%) have multiple restriction codes. `MP2P / LZ30` is the most common pairing. Displaying either one alone gives an answer that can earn a fine during the hours the other applies.
+- 583 bays (9.2%) cannot be matched to a street name.
+- Catalog metadata bears no relation to actual data freshness: another dataset's metadata claimed an update 6 days ago while its newest record was a year old.
+- The feed republishes roughly every 2 minutes, is CORS-open, needs no API key, and allows 10,000 requests per IP per day. The browser can read it directly.
 
-## Outcome 指標
+## Outcome measures
 
-第一輪的成功不是「頁面做完」，而是：
+Success in the first round is not "the page is built". It is:
 
-- live、delayed、stale、unavailable 四個狀態不會互相偽裝。
-- 任何時刻畫面上的數字，都不包含未回報感測器的貢獻。
-- 被排除的數量與「若照單全收會是多少」在頁面上可見，不是只寫在 README。
-- 資料超過 60 分鐘時，頁面不顯示任何空位數字。
-- 開著不動的分頁會自行老化，不需等待網路刷新。
-- 街道層級的限制只在無歧義時具名，否則導向現場標誌。
-- Desktop 與 375px mobile 首屏都先看見資料狀態，再看見數字。
+- The `live`, `delayed`, `stale` and `unavailable` states never impersonate one another.
+- No figure on screen at any moment includes a contribution from a sensor that is not reporting.
+- The quantity excluded, and what the number would have been without the exclusion, are visible on the page rather than buried in a README.
+- Past 60 minutes, the page shows no bay count at all.
+- A tab left open ages itself without waiting for a network refresh.
+- Street-level restrictions are named only where unambiguous; otherwise the reader is pointed at the sign.
+- On both desktop and 375px mobile, the first screen shows the data state before it shows a number.
 
-下一階段應以 5–8 位不熟悉墨爾本停車規則的使用者做理解測試：至少 4/5 能在 10 秒內答出資料狀態、資料年齡，以及「哪一條街值得先去」。這是尚待驗證的研究，不以團隊主觀代替。
+The next stage should run comprehension testing with 5–8 people unfamiliar with Melbourne parking rules: at least 4 in 5 should answer the data state, the data age, and "which street is worth trying first" within ten seconds. That research is still outstanding, and team opinion is not a substitute for it.
 
 ## Roadmap
 
-### P0 — 資料可信 contract（目前）
+### P0 — the data trust contract (current)
 
-- 分離 `observedAt` / `sourceTime` / `fetchedAt`。
-- 30 分鐘感測器信任窗，未回報者不計入空位。
-- 驗證 schema、記錄數、座標範圍、來源時間與回報覆蓋率，全部 fail closed。
-- `live / delayed / stale / unavailable` 狀態機與現在式撤回規則。
-- 拒絕較舊的快照覆寫較新的。
-- 每次 render 由時鐘重算 freshness，讓隱藏分頁還原後不會顯示過期標籤。
-- 多重標誌牌時顯示「Restrictions vary」而非任選其一。
-- 未分區車位保留在總和內，但不進入推薦名單。
+- Keep `observedAt` / `sourceTime` / `fetchedAt` distinct.
+- A 30-minute sensor trust window; sensors that have gone quiet never count toward free bays.
+- Validate schema, record count, coordinate range, source time and reporting coverage — all fail closed.
+- The `live / delayed / stale / unavailable` state machine, with present-tense claims withdrawn on schedule.
+- Reject an older snapshot overwriting a newer one.
+- Recompute freshness from the clock on every render, so a restored hidden tab never shows an expired label.
+- Where signage disagrees, list what is actually present instead of picking one plate.
+- Keep unmapped bays in the totals while excluding them from recommendations.
 
-### P1 — 讓答案更可行動
+### P1 — make the answer actionable
 
-- 依當下星期與時間篩選標誌牌限制，回答「我現在可以停多久」而非只有「這裡是計時區」。
-- 以使用者位置或目的地排序鄰近街道，取代全市排行。
-- 用議會的歷史資料呈現「這條街通常這個時間有多空」，與即時讀數明確分離。
-- 建立部署後的 freshness smoke check，並在來源長時間中斷時於頁面明示。
+- Filter signage by the current day and time, answering "how long can I park here right now" rather than only "this is a metered zone".
+- Rank streets near the user's location or destination instead of city-wide.
+- Use the council's historical data to show how empty a street usually is at this hour, kept clearly separate from the live reading.
+- Add a post-deploy freshness smoke check, and state it on the page when the source has been down for a sustained period.
 
-### P2 — 分享、SEO 與正式網域
+### P2 — sharing, SEO and a real domain
 
-- canonical、分享圖、structured data、sitemap、robots 與 404。
-- 確認網域、DNS 權限與 ownership 後才設定 custom domain / CNAME / HTTPS。
-- 依實際使用者研究決定通知或個人化，不以功能數量為目標。
+- Canonical URL, share image, structured data, sitemap, robots and a 404 page.
+- Configure a custom domain, CNAME and HTTPS only after domain, DNS authority and ownership are confirmed.
+- Let real user research decide on notifications or personalisation. Feature count is not the goal.
 
-## 明確不做的事
+## Explicitly out of scope
 
-- 不預測某個車位在你抵達時是否仍空著。感測器讀數是關於最近過去的事實，不是預約。
-- 不取代現場標誌。限制、封路、許可區與活動以標誌為準。
-- 不宣稱涵蓋完整。只有裝了可用感測器的車位會出現；本站沒有的街道仍可能有停車位。
+- Predicting whether a given bay will still be free when you arrive. A sensor reading is a fact about the recent past, not a reservation.
+- Replacing the signs on the street. Restrictions, closures, permit zones and events are settled by signage.
+- Claiming complete coverage. Only bays with a working sensor appear here; a street missing from this site may still have parking.

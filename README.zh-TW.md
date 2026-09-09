@@ -8,9 +8,9 @@
 
 它與其他停車地圖的差別只有一點：**它會扣掉已經停止回報的感測器，並在頁面上告訴你扣了多少。** 議會的 feed 帶著 963 個數月至數年沒回報的感測器，直接計數會虛報約 11% 的空位。
 
-產品 mission、研究證據與 roadmap 見 [`PRODUCT.md`](PRODUCT.md)；production 的驗證、新鮮度與 fallback 規則見 [`docs/DATA_TRUST_CONTRACT.md`](docs/DATA_TRUST_CONTRACT.md)。
+產品 mission、研究證據與 roadmap 見 [`PRODUCT.zh-TW.md`](PRODUCT.zh-TW.md)；production 的驗證、新鮮度與 fallback 規則見 [`docs/DATA_TRUST_CONTRACT.zh-TW.md`](docs/DATA_TRUST_CONTRACT.zh-TW.md)。
 
-> 本檔為 [README.md](README.md) 的中文版。英文版是主要版本，內容有出入時以英文版為準。
+> 本檔為 [README.md](README.md) 的中文版。本 repo 每份文件都是英文為主體、中文（`*.zh-TW.md`）並列；內容有出入時以英文版為準。
 
 ## 為什麼值得存在
 
@@ -103,8 +103,13 @@ melbourne-parking-dashboard/
 ├── scripts/
 │   ├── build-street-crosswalk.ts
 │   └── check-source-freshness.ts
-├── docs/DATA_TRUST_CONTRACT.md
-└── PRODUCT.md
+├── docs/
+│   ├── DATA_TRUST_CONTRACT.md   # 英文，主要版本
+│   └── DATA_TRUST_CONTRACT.zh-TW.md
+├── PRODUCT.md
+├── PRODUCT.zh-TW.md
+├── README.md
+└── README.zh-TW.md
 ```
 
 ## Deployment

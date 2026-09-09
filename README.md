@@ -11,7 +11,7 @@ One thing separates it from every other parking map: **it subtracts the sensors 
 Mission, research evidence and roadmap: [`PRODUCT.md`](PRODUCT.md).
 Production validation, freshness and fallback rules: [`docs/DATA_TRUST_CONTRACT.md`](docs/DATA_TRUST_CONTRACT.md).
 
-> Both of those documents are currently written in Traditional Chinese.
+Every document in this repository is written in English with a Traditional Chinese counterpart alongside it (`*.zh-TW.md`). English is the authority where the two diverge.
 
 ## Why this exists
 
@@ -104,8 +104,13 @@ melbourne-parking-dashboard/
 ├── scripts/
 │   ├── build-street-crosswalk.ts
 │   └── check-source-freshness.ts
-├── docs/DATA_TRUST_CONTRACT.md
-└── PRODUCT.md
+├── docs/
+│   ├── DATA_TRUST_CONTRACT.md   # English, authoritative
+│   └── DATA_TRUST_CONTRACT.zh-TW.md
+├── PRODUCT.md
+├── PRODUCT.zh-TW.md
+├── README.md
+└── README.zh-TW.md
 ```
 
 ## Deployment
