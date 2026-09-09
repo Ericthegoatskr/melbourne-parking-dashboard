@@ -6,3 +6,12 @@ dist
 .env.*
 !.env.example
 tsconfig.*.tsbuildinfo
+
+# Compiled output must never sit next to its TypeScript source.
+# `tsc` emitted these once when the typecheck script wrongly passed
+# `--noEmit false`, and Vite resolves vite.config.js *before* vite.config.ts,
+# so a stale artifact here silently wins over the real config.
+src/**/*.js
+scripts/**/*.js
+vite.config.js
+vitest.config.js
