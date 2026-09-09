@@ -45,11 +45,10 @@ Vite 會輸出本機預覽網址。
 ## Verification
 
 ```bash
-npm run lint
-npm run typecheck
-npm run test
-npm run build
+npm run verify
 ```
+
+等同於 CI 跑的 `lint` → `typecheck` → `test` → `build`。**用這個指令，不要各自用 `npx` 跑底層工具**：本機用 `npx tsc -b`、CI 用 `npm run typecheck` 的分岔，正是讓一個壞掉的 script 通過本機檢查卻在 CI 失敗的原因。
 
 會影響使用者看到的變更，還必須從 production build 實際檢查 desktop / 375px mobile、四種資料狀態、互動、overflow 與 browser console。**build success 本身不是完整驗收。**
 

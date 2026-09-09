@@ -3,13 +3,16 @@
   "private": true,
   "version": "0.1.0",
   "type": "module",
-  "engines": { "node": "^20.0.0 || ^22.0.0 || >=24.0.0" },
+  "engines": {
+    "node": "^20.0.0 || ^22.0.0 || >=24.0.0"
+  },
   "scripts": {
     "dev": "vite",
     "build": "tsc -b && vite build",
     "preview": "vite preview",
+    "verify": "npm run lint && npm run typecheck && npm run test && npm run build",
     "lint": "eslint .",
-    "typecheck": "tsc -b --noEmit false --emitDeclarationOnly false",
+    "typecheck": "tsc -b",
     "test": "vitest run",
     "test:watch": "vitest",
     "build:crosswalk": "tsx scripts/build-street-crosswalk.ts",
