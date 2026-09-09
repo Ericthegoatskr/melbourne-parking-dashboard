@@ -1,46 +1,67 @@
-# 墨爾本街邊停車即時看板
+# Melbourne Street Parking
 
-以 City of Melbourne 官方感測器開放資料呈現街邊停車位狀況的公共看板。
+**English** · [繁體中文](README.zh-TW.md)
 
-它與其他停車地圖的差別只有一點：**它會扣掉已經停止回報的感測器，並在頁面上告訴你扣了多少。** 議會的 feed 帶著 963 個數月至數年沒回報的感測器，直接計數會虛報約 11% 的空位。
+A public dashboard of on-street parking availability in the City of Melbourne, built on the council's own sensor open data.
 
-產品 mission、研究證據與 roadmap 見 [`PRODUCT.md`](PRODUCT.md)；production 的驗證、新鮮度與 fallback 規則見 [`docs/DATA_TRUST_CONTRACT.md`](docs/DATA_TRUST_CONTRACT.md)。
+**Live site:** <https://ericthegoatskr.github.io/melbourne-parking-dashboard/>
+
+One thing separates it from every other parking map: **it subtracts the sensors that have stopped reporting, and tells you on the page how many it subtracted.** The council's feed carries 963 sensors that have not reported in months to years while still shipping their last known state. Counting them overstates free bays by roughly 11%.
+
+Mission, research evidence and roadmap: [`PRODUCT.md`](PRODUCT.md).
+Production validation, freshness and fallback rules: [`docs/DATA_TRUST_CONTRACT.md`](docs/DATA_TRUST_CONTRACT.md).
+
+> Both of those documents are currently written in Traditional Chinese.
+
+## Why this exists
+
+The City of Melbourne is the source of truth and already publishes its sensor data in full. Other parking apps have long been able to draw dots on a map. So the differentiator here is not another map — it is what the dashboard refuses to count.
+
+Measured against the live feed on 2026-09-08:
+
+| | Bays reported free |
+| --- | --- |
+| Counting every record in the feed | 4,370 |
+| Counting only sensors that are actually reporting | **3,922** |
+| Difference | **448 phantom bays — an 11.4% overstatement** |
+
+That is not a theoretical flaw. Its concrete consequence is a driver heading for a street they were told had space, finding none, and going around the block again.
 
 ## Features
 
-- 依官方時間戳明確標示 live、delayed、stale、unavailable 四種狀態，資料狀態永遠排在數字之前。
-- 資料超過 15 分鐘即撤回所有現在式敘述；超過 60 分鐘不顯示任何空位數字。
-- 30 分鐘感測器信任窗：未回報的車位計為「不回報」，永不計入空位。
-- 頁面上可展開「本看板排除了什麼」，直接對照天真計數會得出的數字。
-- 依街道排名（最多空位／機率最佳），機率排名要求至少 5 個回報中的感測器，避免兩個感測器的街道以 100% 登頂。
-- 街道層級地圖，未回報的街道畫成空心灰色，絕不上色成「有位子」。
-- 標誌牌限制只在整條街無歧義時具名，否則顯示「Restrictions vary — read the sign」。
-- 較舊的快照不得覆寫較新的；抓取失敗保留上一份有效讀數並照實老化。
-- 開著的分頁自行老化，不依賴網路刷新或未被節流的計時器。
-- Desktop 與 375px mobile responsive；無水平溢出。
+- Explicit `live`, `delayed`, `stale` and `unavailable` states derived from the council's own timestamps. The data state always appears above the numbers.
+- Present-tense claims are withdrawn past 15 minutes; past 60 minutes no bay count is shown at all.
+- A 30-minute sensor trust window. Bays that have not reported are counted as *not reporting* and never as free.
+- An expandable "what this dashboard excluded" panel showing the exclusions alongside what a naive count would have claimed.
+- Street rankings by most free bays or best odds. The odds ranking requires at least 5 reporting sensors, so a two-sensor street cannot top the list at 100%.
+- A street-level map. Streets with nothing reporting are drawn hollow and grey, never coloured as though a bay were known to be free.
+- Signage restrictions named only where a street's zones agree; otherwise the actual mix is listed and the reader is sent to the sign.
+- An older snapshot may never overwrite a newer one. A failed fetch keeps the last valid reading and ages it honestly.
+- An open tab ages itself, without depending on a network refresh or an unthrottled timer.
+- Responsive from desktop down to 375px, with no horizontal overflow.
 
-## Data Sources
+## Data sources
 
-| Dataset | 用途 |
+| Dataset | Used for |
 | --- | --- |
-| [`on-street-parking-bay-sensors`](https://data.melbourne.vic.gov.au/explore/dataset/on-street-parking-bay-sensors/information/) | 車位佔用狀態、感測器時間、座標 |
-| [`parking-zones-linked-to-street-segments`](https://data.melbourne.vic.gov.au/explore/dataset/parking-zones-linked-to-street-segments/information/) | zone → 街道名稱 |
-| [`sign-plates-located-in-each-parking-zone`](https://data.melbourne.vic.gov.au/explore/dataset/sign-plates-located-in-each-parking-zone/information/) | zone → 標誌牌限制 |
+| [`on-street-parking-bay-sensors`](https://data.melbourne.vic.gov.au/explore/dataset/on-street-parking-bay-sensors/information/) | Bay occupancy, sensor timestamps, coordinates |
+| [`parking-zones-linked-to-street-segments`](https://data.melbourne.vic.gov.au/explore/dataset/parking-zones-linked-to-street-segments/information/) | Zone → street name |
+| [`sign-plates-located-in-each-parking-zone`](https://data.melbourne.vic.gov.au/explore/dataset/sign-plates-located-in-each-parking-zone/information/) | Zone → signage restriction |
 
-資料提供：City of Melbourne，依 [Creative Commons Attribution 4.0](https://creativecommons.org/licenses/by/4.0/) 使用。本產品不是議會服務，也不代表議會背書。
+Data published by the City of Melbourne under [Creative Commons Attribution 4.0](https://creativecommons.org/licenses/by/4.0/). This is not a council service and is not endorsed by the council.
 
-API 開放 CORS 且不需 API key，瀏覽器直接讀取官方 endpoint，不經任何 proxy。
+The API is CORS-open and needs no API key, so the browser reads the official endpoint directly with no proxy in between.
 
-## Run Locally
+## Run locally
 
-需求：Node.js 20、22 或 24 以上。
+Requires Node.js 20, 22, or 24 and above.
 
 ```bash
 npm install
 npm run dev
 ```
 
-Vite 會輸出本機預覽網址。
+Vite prints the local preview URL.
 
 ## Verification
 
@@ -48,9 +69,11 @@ Vite 會輸出本機預覽網址。
 npm run verify
 ```
 
-等同於 CI 跑的 `lint` → `typecheck` → `test` → `build`。**用這個指令，不要各自用 `npx` 跑底層工具**：本機用 `npx tsc -b`、CI 用 `npm run typecheck` 的分岔，正是讓一個壞掉的 script 通過本機檢查卻在 CI 失敗的原因。
+This runs the same four steps as CI, in the same order: `lint` → `typecheck` → `test` → `build`.
 
-會影響使用者看到的變更，還必須從 production build 實際檢查 desktop / 375px mobile、四種資料狀態、互動、overflow 與 browser console。**build success 本身不是完整驗收。**
+**Use this command rather than invoking the underlying tools with `npx`.** Checking locally with `npx tsc -b` while CI ran `npm run typecheck` is exactly how a broken script passed local checks and then failed CI.
+
+For any change a user can see, also exercise a production build in a real browser: desktop and 375px mobile, all four data states, interaction, overflow, and the browser console. **A successful build is not acceptance.**
 
 ## Reference data
 
@@ -58,22 +81,24 @@ npm run verify
 npm run build:crosswalk
 ```
 
-會產生 `public/data/zone-crosswalk.json`（839 個 zone、177 條街道、約 106 KB）。這份對照表只有街道名稱與標誌牌代碼，**不含任何時間戳**——參考資料不可能讓過期的即時資料看起來變新。
+Writes `public/data/zone-crosswalk.json` — 839 zones, 177 streets, about 106 KB.
 
-街道名稱失敗時看板仍可運作：所有車位會落入「未分區」群組，全市數字不受影響。
+The crosswalk holds street names and signage codes and **no timestamps whatsoever**, so reference data can never make stale live data look fresh.
 
-## Project Structure
+If street names fail to load the dashboard still works: every bay falls into the "unmapped" group and the city-wide figures are unaffected.
+
+## Project structure
 
 ```text
 melbourne-parking-dashboard/
 ├── src/
 │   ├── App.tsx
 │   ├── lib/
-│   │   ├── config.ts            # 所有門檻，皆有實測根據
-│   │   ├── odsClient.ts         # 抓取與 fail-closed 驗證
-│   │   ├── freshness.ts         # 四態狀態機
-│   │   ├── parkingModel.ts      # 聚合、排名、標誌牌
-│   │   └── useParkingData.ts    # 生命週期、倒退保護、自我老化
+│   │   ├── config.ts            # every threshold, each traceable to a measurement
+│   │   ├── odsClient.ts         # fetching and fail-closed validation
+│   │   ├── freshness.ts         # the four-state machine
+│   │   ├── parkingModel.ts      # aggregation, ranking, signage
+│   │   └── useParkingData.ts    # lifecycle, regression guard, self-ageing
 │   ├── components/
 │   └── __tests__/
 ├── scripts/
@@ -85,23 +110,23 @@ melbourne-parking-dashboard/
 
 ## Deployment
 
-`.github/workflows/pages.yml` 會在推送到 `main` 與手動觸發時執行 lint、typecheck、測試、重建對照表並部署到 GitHub Pages。
+`.github/workflows/pages.yml` runs lint, typecheck, tests, rebuilds the crosswalk and deploys to GitHub Pages on pushes to `main` and on manual dispatch.
 
-這個看板不需要排程抓取：瀏覽器直接讀官方 feed，所以部署產物只是靜態程式碼加上參考資料。**沒有需要保鮮的資料快照，也就沒有 cron 延遲會讓使用者看到過期資料的風險。**
+This dashboard needs no scheduled ingestion. The browser reads the official feed directly, so the deployed artifact is static code plus reference data. **There is no data snapshot to keep fresh, and therefore no cron delay that could leave a user looking at stale figures.**
 
-`scripts/check-source-freshness.ts`（`npm run probe:freshness`）獨立驗證官方來源本身是否健康，可在 CI 排程執行；它檢查的是上游，不是部署產物。
+`scripts/check-source-freshness.ts` (`npm run probe:freshness`) independently verifies that the official source itself is healthy, and runs on a schedule in CI. It checks upstream, not our deployment.
 
 ## Basemap dependency
 
-地圖底圖使用 OpenStreetMap 官方圖磚，以 CSS 濾鏡在瀏覽器端調成深色近灰階（顏色只保留給資料）。
+The basemap uses OpenStreetMap's own tiles, darkened in the browser with a CSS filter to near-greyscale so that colour belongs only to the data.
 
-原本使用的 CARTO 深色底圖現在會回傳 **HTTP 200 但內容是「API KEY REQUIRED」浮水印圖磚**——一個有效的回應載著無效的內容，正好是本看板存在的理由的縮影。
+The CARTO dark basemap used previously now answers **HTTP 200 with an "API KEY REQUIRED" watermark tile** — a valid response carrying invalid content, which is a neat miniature of the reason this dashboard exists.
 
-OSM 的 tile usage policy 不允許高流量使用。正式上線前應改用有金鑰與 SLA 的圖磚供應商，或自架圖磚。目前這是唯一一個對第三方（非官方資料源）的執行期依賴；它失效時只有底圖消失，車位數字與街道排名不受影響。
+OpenStreetMap's tile usage policy does not permit heavy traffic. Before any real volume this should move to a keyed provider with an SLA, or to self-hosted tiles. This is the only third-party runtime dependency outside the official data source; if it fails, the basemap disappears and the bay counts and street rankings are unaffected.
 
 ## Known limitations
 
-- 只涵蓋裝有可用地面感測器的車位。本站沒有的街道仍可能有停車位。
-- 感測器讀數是關於最近過去的事實，不保證你抵達時位子還在。
-- 街道層級的限制是概要；現場標誌永遠優先。
-- 583 個車位（9.2%）無法對應街道名稱，歸入「未分區」；它們計入全市總數，但不會出現在推薦名單。
+- Covers only bays with a working in-ground sensor. A street missing from this page may still have parking.
+- A sensor reading is a fact about the recent past. It is not a guarantee that a bay will still be free when you arrive.
+- Street-level restrictions are a summary. The sign on the street always wins.
+- 583 bays (9.2%) cannot be matched to a street name and are grouped as "unmapped". They count toward the city totals but never appear as a recommendation.
