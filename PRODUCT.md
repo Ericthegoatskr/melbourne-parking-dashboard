@@ -4,7 +4,7 @@
 
 Research last updated: 2026-09-08 (Australia/Melbourne)
 
-Roadmap updated: 2026-11-08 — destination and current-location nearby parking implemented.
+Roadmap updated: 2026-11-08 — nearby parking search and external map directions implemented.
 
 ## Mission
 
@@ -66,7 +66,8 @@ The next stage should run comprehension testing with 5–8 people unfamiliar wit
 ### P1 — make the answer actionable
 
 - **Implemented: destination-based nearby parking.** Submit a City of Melbourne address/place search or select one of eight bundled council landmarks. Filter individual bays within 250 m, 500 m or 1 km, then rank streets by distance or reported free bays, with occupied and silent streets following. Local results retain the sensor trust/freshness rules; summary cards remain city-wide, and clearing the destination restores the original exploration controls. Map distances are straight-line estimates, with no route or availability guarantee. Official directories need no keys; partial failures are disclosed and landmark choices survive directory outages. See [README](README.md#data-sources) for reference-data limits.
-- **Implemented: use the user's current location.** An explicit button requests one browser-authorised fix, then uses the same distance and trusted-availability ranking. Capture time and estimated accuracy are shown; movement is not tracked, and the user must press again after moving. Fixes older than 120 seconds or less precise than 1 km are rejected. Permission, support and timeout failures preserve the previous destination, and cancelled or superseded requests cannot replace a newer choice. Coordinates stay out of URLs, persistent storage and backend uploads; map tile requests still disclose the viewed area to the provider. See [README](README.md#current-location) for limits and recovery.
+- **Implemented: use the user's current location.** An explicit button requests one browser-authorised fix, then uses the same distance and trusted-availability ranking. Capture time and estimated accuracy are shown; movement is not tracked, and the user must press again after moving. Fixes older than 120 seconds or less precise than 1 km are rejected. Permission, support and timeout failures preserve the previous destination, and cancelled or superseded requests cannot replace a newer choice. Device coordinates stay out of URLs, persistent storage and backend uploads; map tile requests still disclose the viewed area to the provider. See [README](README.md#current-location) for limits and recovery.
+- **Implemented: directions to a selected nearby street.** Google Maps and Apple Maps links use the actual representative sensor coordinates and driving mode, without transmitting the device fix as an origin. Users explicitly open a provider from the street panel or map popup; city-wide street centres are excluded. Occupied, silent and stale readings retain honest state guidance, and unavailable data hides navigation. This identifies a location, not a reservation or arrival-time availability guarantee. See [README](README.md#parking-directions) for provider behaviour and verification.
 - Filter signage by the current day and time, answering "how long can I park here right now" rather than only "this is a metered zone".
 - Use the council's historical data to show how empty a street usually is at this hour, kept clearly separate from the live reading.
 - Add a post-deploy freshness smoke check, and state it on the page when the source has been down for a sustained period.

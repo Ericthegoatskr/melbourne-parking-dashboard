@@ -5,6 +5,8 @@ import { mayClaimCurrent } from '../lib/freshness';
 import { describeStreetSignage } from '../lib/parkingModel';
 import { formatDistance, type Destination } from '../lib/nearbyParking';
 import { formatMelbourneDateTime } from '../lib/format';
+import { directionsForStreet } from '../lib/parkingDirections';
+import { directionsNote } from '../lib/directionsNote';
 import type { FeedState, StreetAvailability } from '../lib/types';
 import 'leaflet/dist/leaflet.css';
 import './ParkingMap.css';
@@ -91,7 +93,11 @@ export function ParkingMap({ streets, state, selected, onSelect, destination = n
     // A responsive grid can resize this panel without a window resize event.
     const observer = typeof ResizeObserver === 'undefined'
       ? null
-      : new ResizeObserver(() => map.invalidateSize({ pan: false }));
+      : new ResizeObserver(() => {
+        map.invalidateSize({ pan: false });
+        // Keep an open directions popup inside the map after phone rotation.
+        map.eachLayer((layer) => { if (layer instanceof L.Popup) layer.update(); });
+      });
     observer?.observe(containerRef.current);
 
     return () => {
@@ -173,6 +179,7 @@ export function ParkingMap({ streets, state, selected, onSelect, destination = n
       const silent = street.vacancyRate === null;
       const radius = 6 + Math.sqrt(street.total / maxTotal) * 16;
       const signage = describeStreetSignage(street);
+      const directions = state === 'unavailable' ? null : directionsForStreet(street);
       const distanceMetres = 'distanceMetres' in street && typeof street.distanceMetres === 'number'
         ? street.distanceMetres : null;
 
@@ -193,7 +200,12 @@ export function ParkingMap({ streets, state, selected, onSelect, destination = n
               `${current ? '' : ' at last reading'}</span>`) +
           (distanceMetres !== null ? `<br/><span>${formatDistance(distanceMetres)} straight line · counts within search radius</span>` : '') +
           (street.notReporting > 0 ? `<br/><span>${street.notReporting} sensors silent</span>` : '') +
-          (signage ? `<br/><span>${escapeHtml(signage)}</span>` : ''),
+          (signage ? `<br/><span>${escapeHtml(signage)}</span>` : '') +
+          (directions ? `<div class="parking-popup-directions"><p>${escapeHtml(directionsNote(street, state))}</p>` +
+            `<a href="${escapeHtml(directions.google)}" target="_blank" rel="noopener noreferrer">Google Maps<span class="sr-only"> (opens in a new tab)</span></a>` +
+            `<a href="${escapeHtml(directions.apple)}" target="_blank" rel="noopener noreferrer">Apple Maps<span class="sr-only"> (opens in a new tab)</span></a>` +
+            '<small>Driving directions. Check signs; space is not reserved. Your maps app chooses the starting point.</small></div>' : ''),
+        { maxWidth: 240, maxHeight: 260 },
       );
 
       marker.on('click', () => onSelectRef.current(street.street));

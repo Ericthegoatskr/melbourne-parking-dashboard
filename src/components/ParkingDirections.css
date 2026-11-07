@@ -1,0 +1,12 @@
+.parking-directions { margin: 0 8px 14px; padding: 12px 0 0; border-top: 1px solid var(--border); }
+.parking-directions h3 { display: flex; align-items: flex-start; gap: 7px; margin: 0; color: var(--ink); font-size: 14px; font-weight: 650; overflow-wrap: anywhere; }
+.parking-directions h3 svg { flex-shrink: 0; margin-top: 3px; color: var(--accent-dark); }
+.parking-directions p { margin: 8px 0 0; max-width: 65ch; color: var(--ink-soft); font-size: 12px; line-height: 1.7; }
+.parking-directions-actions { display: flex; flex-wrap: wrap; gap: 9px; margin-top: 12px; }
+.parking-directions-actions a { display: inline-flex; flex: 1 1 135px; align-items: center; justify-content: center; gap: 6px; min-height: 46px; padding: 10px 12px; border: 1px solid var(--border); border-radius: 9px; background: var(--accent-soft); color: var(--accent-dark); font-size: 12px; font-weight: 600; transition: background 180ms ease-out; }
+.parking-directions-actions a:hover { background: var(--surface); }
+.parking-directions .parking-directions-hint { color: var(--muted); font-size: 11px; }
+html[data-theme="navy"] .parking-directions { border-color: var(--palette-line); }
+html[data-theme="navy"] .parking-directions-actions a { background: var(--palette-selection); border-color: var(--palette-selection-line); color: var(--palette-action); }
+html[data-theme="navy"] .parking-directions-actions a:hover { background: var(--palette-subtle); }
+@media (prefers-reduced-motion: reduce) { .parking-directions-actions a { transition: none; } }

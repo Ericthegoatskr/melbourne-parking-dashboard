@@ -6,6 +6,7 @@ import { mayClaimCurrent } from '../lib/freshness';
 import type { FeedState, StreetAvailability } from '../lib/types';
 import type { StreetSort } from '../lib/parkingModel';
 import { formatDistance, type NearbySort, type NearbyStreet } from '../lib/nearbyParking';
+import { ParkingDirections } from './ParkingDirections';
 import './panels.css';
 
 interface Props {
@@ -35,7 +36,7 @@ export const StreetList = memo(function StreetList({ streets, state, sort, onSor
         <span className="street-panel-icon"><MapPin size={19} aria-hidden /></span>
         <div>
           <h2>{nearby ? (current ? 'Nearby streets' : 'Nearby streets at last reading') : (current ? 'Where there are bays now' : 'Where there were bays')}</h2>
-          <p>{nearby ? `Within ${formatDistance(nearby.radiusMetres)} · select a street to focus the map.` : 'Select a street to focus the map.'}</p>
+          <p>{nearby ? `Within ${formatDistance(nearby.radiusMetres)} · select a street for directions and its map location.` : 'Select a street to focus the map.'}</p>
         </div>
       </div>
       <div className="street-controls">
@@ -82,7 +83,7 @@ export const StreetList = memo(function StreetList({ streets, state, sort, onSor
       ) : (
         <ul className="street-list">
           {streets.map((street) => (
-            <StreetRow key={street.street} street={street} current={current} selected={selected === street.street} onSelect={onSelect} nearby={Boolean(nearby)} />
+            <StreetRow key={street.street} street={street} state={state} selected={selected === street.street} onSelect={onSelect} nearby={Boolean(nearby)} />
           ))}
         </ul>
       )}
@@ -90,14 +91,15 @@ export const StreetList = memo(function StreetList({ streets, state, sort, onSor
   );
 });
 
-function StreetRow({ street, current, selected, onSelect, nearby }: {
+function StreetRow({ street, state, selected, onSelect, nearby }: {
   street: StreetAvailability;
-  current: boolean;
+  state: FeedState;
   selected: boolean;
   onSelect: (street: string | null) => void;
   nearby: boolean;
 }) {
   const reporting = street.vacant + street.occupied;
+  const current = mayClaimCurrent(state);
   const silent = reporting === 0;
   const signage = describeStreetSignage(street);
 
@@ -107,6 +109,7 @@ function StreetRow({ street, current, selected, onSelect, nearby }: {
         type="button"
         onClick={() => onSelect(selected ? null : street.street)}
         aria-pressed={selected}
+        aria-expanded={nearby ? selected : undefined}
         className={`street-row ${selected ? 'street-row--selected' : ''} ${silent ? 'street-row--silent' : ''}`}
       >
         <div className="street-row-copy">
@@ -130,6 +133,7 @@ function StreetRow({ street, current, selected, onSelect, nearby }: {
         </div>
         <VacancyBar rate={street.vacancyRate} />
       </button>
+      {nearby && selected && <ParkingDirections street={street} state={state} />}
     </li>
   );
 }

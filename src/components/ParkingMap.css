@@ -79,6 +79,16 @@
 .parking-map-canvas.leaflet-container .leaflet-popup-content { font-size: 12px; line-height: 1.75; margin: 15px 20px; }
 .parking-map-canvas.leaflet-container .leaflet-popup-content strong { font-weight: 650; color: var(--ink); }
 .parking-map-canvas.leaflet-container .leaflet-popup-content span { color: var(--ink-soft); }
+/* Directions stay readable when a narrow map places its popup over zoom controls. */
+.parking-map-canvas.leaflet-container .leaflet-popup-pane { z-index: 850; }
+.parking-map-canvas.leaflet-container .parking-popup-directions { display: flex; flex-wrap: wrap; gap: 8px; padding-top: 10px; margin-top: 10px; border-top: 1px solid var(--border); }
+.parking-map-canvas.leaflet-container .parking-popup-directions p { flex-basis: 100%; margin: 0; font-size: 11px; }
+.parking-map-canvas.leaflet-container .parking-popup-directions a { display: inline-flex; flex: 1 1 100px; align-items: center; justify-content: center; min-height: 44px; padding: 8px; border: 1px solid var(--border); border-radius: 8px; background: var(--accent-soft); color: var(--accent-dark); text-decoration: none; font-weight: 600; font-size: 11px; }
+.parking-map-canvas.leaflet-container .parking-popup-directions a:hover { background: var(--surface); }
+.parking-map-canvas.leaflet-container .parking-popup-directions small { flex-basis: 100%; color: var(--muted); font-size: 10px; }
+html[data-theme="navy"] .parking-map-canvas.leaflet-container .parking-popup-directions { border-color: var(--palette-line); }
+html[data-theme="navy"] .parking-map-canvas.leaflet-container .parking-popup-directions a { background: var(--palette-selection); border-color: var(--palette-selection-line); color: var(--palette-action); }
+html[data-theme="navy"] .parking-map-canvas.leaflet-container .parking-popup-directions a:hover { background: var(--palette-subtle); }
 .parking-map-canvas.leaflet-container a.leaflet-popup-close-button { color: var(--muted); top: 4px; right: 4px; }
 .parking-map-canvas.leaflet-container .leaflet-control-zoom {
   overflow: hidden;

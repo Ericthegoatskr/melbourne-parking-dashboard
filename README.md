@@ -38,6 +38,7 @@ That is not a theoretical flaw. Its concrete consequence is a driver heading for
 - **Use my current location:** request a one-time browser location fix only after pressing the button and allowing location access. The same nearby rankings and map use that point; the captured time and estimated accuracy stay visible. Press again after moving. Address search and landmarks remain available if location access fails or is declined.
 - Choose a 250 m, 500 m or 1 km radius and rank nearby streets by **Nearest first** or **Most reported free**. Individual sensor bays are filtered before street counts are calculated; the summary cards remain city-wide. Streets with reported free bays come first, followed by occupied-only streets, then silent sensors. Distances and map pins use the nearest reporting free bay where available, otherwise the nearest reporting bay, then the nearest silent sensor.
 - Nearby results retain the 30-minute sensor trust window and all feed freshness rules: stale readings describe the past, and unavailable data produces no availability counts. **Clear destination** restores the original city-wide street search, sorting and map view.
+- **Directions to nearby parking:** selecting a nearby street reveals Google Maps and Apple Maps links in the street panel and map popup. They use that street's actual representative sensor location, not its city-wide centre or the searched landmark.
 - A street-level map. Streets with nothing reporting are drawn hollow and grey, never coloured as though a bay were known to be free.
 - Signage restrictions named only where a street's zones agree; otherwise the actual mix is listed and the reader is sent to the sign.
 - An older snapshot may never overwrite a newer one. A failed fetch keeps the last valid reading and ages it honestly.
@@ -70,7 +71,15 @@ Location access requires HTTPS (or a trusted local development origin), browser 
 
 This product accepts a fix at most 120 seconds old with estimated accuracy of 1 km or better, matching the largest search radius. Older, invalid or less precise fixes require retry or an address. The captured date/time is displayed in Melbourne time; it is separate from parking-feed freshness. If uncertainty exceeds the chosen radius, the page recommends a larger radius or an exact address. Coverage still means City of Melbourne sensor bays; an empty result outside that network is not evidence that no parking exists.
 
-Coordinates are used in page memory for distance calculations, without reverse geocoding, a coordinate-bearing URL, persistent browser storage or a backend upload. The existing OpenStreetMap tile requests reveal the map area being viewed to the tile provider; this is not a promise that viewing a location is invisible to third parties.
+Device coordinates are used in page memory for distance calculations, without reverse geocoding, a URL containing the device fix, persistent browser storage or a backend upload. Directions links contain the public parking sensor's coordinates instead. The existing OpenStreetMap tile requests reveal the map area being viewed to the tile provider; this is not a promise that viewing a location is invisible to third parties.
+
+## Parking directions
+
+After choosing a destination or using your current location, select a nearby street and explicitly open **Google Maps** or **Apple Maps**. The HTTPS links request driving directions in a new tab or the provider's app; selecting a street alone never launches navigation. The link supplies only the public sensor destination and driving mode, with no API key or stored device location as the origin. The provider chooses the starting point and handles any location permission or sign-in itself.
+
+These links follow the official [Google Maps URLs](https://developers.google.com/maps/documentation/urls/get-started) and [Apple unified map URLs](https://developer.apple.com/documentation/mapkit/unified-map-urls) formats. App handoff depends on the browser/device; Google may show a route preview when a starting location is unavailable. Apple's current native URL format requires iOS 18.4 or macOS 15.4 and later; web behaviour is provider-dependent.
+
+Directions identify a sensor location, not a reservation or a promise of a free space on arrival. Occupied-only, silent and stale streets retain links with explicit availability warnings; unavailable parking data hides the controls. The original city-wide street-centre map has no directions links. Always check street signs and restrictions.
 
 ## Run locally
 
@@ -100,6 +109,8 @@ For collection navigation, check all five same-tab links, the active Parking mar
 For destination search, submit `200 Collins Street`, explicitly select the address, then try a bundled landmark. Switch all three radii and both rankings; confirm the map's destination/radius, local street counts and unchanged city-wide cards. Clear the destination to restore the original controls. On desktop and mobile, also exercise a no-match query, directory failure/partial results, editing or selecting a landmark during a pending search, keyboard focus, stale/unavailable parking data and reduced motion. Empty nearby results mean no mapped sensor bays in that radius, not proof that no parking exists.
 
 For current location, use controlled test coordinates to cover allow, deny, unsupported/unavailable, timeout, coarse or old fixes, and a point outside the sensor network. Check that loading the page makes no location request; then verify both rankings, all radii, captured time/accuracy and map reset after success. While a request is pending, try Cancel, typing an address, choosing a landmark, clearing and leaving the page; late callbacks must not restore an abandoned location. Agent verification should use simulated coordinates rather than request the user's real position. Confirm address search and the original map still work after each failure.
+
+For directions, verify both links target the selected street's actual sensor coordinates on fixed provider hosts, with no device-origin or landmark coordinates. Select another street, change radius and clear the destination to check retargeting/removal; verify the map popup and keyboard access, 44px touch targets and links outside the street-selection button. Exercise occupied, silent, stale and unavailable states without implying a confirmed free bay. The original city-wide view must not offer navigation to street centres. Record browser/web and native-app checks separately; a valid web URL is not evidence of tested native navigation.
 
 ## Reference data
 
