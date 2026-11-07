@@ -27,6 +27,8 @@
 
 .parking-map-heading h2 svg { color: var(--accent-dark); }
 .parking-map-heading p { margin: 5px 0 0; color: var(--muted); font-size: 11px; }
+.parking-map-heading > div { min-width: 0; }
+.parking-map-heading p { overflow-wrap: anywhere; }
 
 .parking-map-reset {
   display: inline-flex;
@@ -107,6 +109,29 @@
 .map-key-some { background: #b77a22; }
 .map-key-few { background: #bf5b70; }
 .map-key-silent { border: 1.5px solid #817b89; background: transparent; }
+.map-key-destination { background: #805115; }
+.parking-map-canvas .parking-destination-marker {
+  display: grid;
+  place-items: center;
+  background: #805115;
+  border: 2px solid #fff3df;
+  border-radius: 12px;
+  color: #fff3df;
+}
+.parking-map-canvas .parking-destination-marker:focus-visible {
+  outline: 3px solid #34291b;
+  outline-offset: 3px;
+}
+.parking-map-canvas.leaflet-container .parking-destination-tooltip {
+  max-width: 220px;
+  white-space: normal;
+  overflow-wrap: anywhere;
+  font-family: var(--font-ui);
+  font-size: 12px;
+  color: #34291b;
+  background: #fff3df;
+  border-color: #ddccb0;
+}
 .parking-map-key small { display: block; margin-top: 11px; color: var(--muted); font-size: 10px; line-height: 1.65; }
 
 @media (max-width: 1049px) {

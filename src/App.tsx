@@ -3,6 +3,7 @@ import { ArrowUpRight, Database, LayoutGrid, ListFilter, Map, Menu, ShieldCheck,
 import { FreshnessBanner, FreshnessLegend } from './components/FreshnessBanner';
 import { SummaryCards } from './components/SummaryCards';
 import { StreetList } from './components/StreetList';
+import { DestinationFinder } from './components/DestinationFinder';
 import { DeferredParkingMap } from './components/DeferredParkingMap';
 import { DataQualityPanel } from './components/DataQualityPanel';
 import { Footer } from './components/Footer';
@@ -24,10 +25,12 @@ import {
 } from './lib/parkingModel';
 import type { StreetSort } from './lib/parkingModel';
 import type { ZoneCrosswalk } from './lib/types';
+import { nearbyStreets, type Destination, type NearbySort } from './lib/nearbyParking';
 
 const DAILY_URL = 'https://ericthegoatskr.github.io/melbourne-daily/';
 const navigation = [
   { id: 'overview', label: 'Overview', Icon: LayoutGrid },
+  { id: 'destination', label: 'Park near a destination', Icon: Map },
   { id: 'streets', label: 'Find a street', Icon: ListFilter },
   { id: 'parking-map', label: 'Parking map', Icon: Map },
   { id: 'quality', label: 'Data quality', Icon: ShieldCheck },
@@ -78,6 +81,9 @@ export default function App() {
   const [sort, setSort] = useState<StreetSort>('most-vacant');
   const [query, setQuery] = useState('');
   const [selected, setSelected] = useState<string | null>(null);
+  const [destination, setDestination] = useState<Destination | null>(null);
+  const [radiusMetres, setRadiusMetres] = useState(500);
+  const [nearbySort, setNearbySort] = useState<NearbySort>('nearest');
   const [active, setActive] = useState(sectionFromHash);
   const [menuOpen, setMenuOpen] = useState(false);
   const menuButton = useRef<HTMLButtonElement>(null);
@@ -154,9 +160,17 @@ export default function App() {
   );
 
   const visibleStreets = useMemo(
-    () => sortStreets(filterStreets(streets, query), sort),
-    [streets, query, sort],
+    () => destination && snapshot
+      ? nearbyStreets(snapshot.bays, crosswalk, destination, radiusMetres, nearbySort)
+      : sortStreets(filterStreets(streets, query), sort),
+    [streets, query, sort, destination, snapshot, crosswalk, radiusMetres, nearbySort],
   );
+
+  const changeDestination = (place: Destination | null) => {
+    setDestination(place);
+    setSelected(null);
+    setQuery('');
+  };
 
   const unmappedBays = useMemo(
     () => streets.find((street) => street.street === UNMAPPED_STREET)?.total ?? 0,
@@ -223,7 +237,7 @@ export default function App() {
             <p className="parking-source-note">City of Melbourne open data</p>
           </div>
           {canExplore
-            ? <a className="intro-actions" href="#parking-map" onClick={() => navigate('parking-map')}><Map size={17} aria-hidden="true" />Explore the map<ArrowUpRight size={16} aria-hidden="true" /></a>
+            ? <a className="intro-actions" href="#destination" onClick={() => navigate('destination')}><Map size={17} aria-hidden="true" />Find nearby parking<ArrowUpRight size={16} aria-hidden="true" /></a>
             : <a className="intro-actions" href="#sources" onClick={() => navigate('sources')}><Database size={17} aria-hidden="true" />Data sources<ArrowUpRight size={16} aria-hidden="true" /></a>}
         </section>
 
@@ -250,11 +264,13 @@ export default function App() {
 
             {state !== 'unavailable' && (
               <>
-                <SummaryCards summary={summary} state={state} />
+                <DestinationFinder destination={destination} onDestinationChange={changeDestination}
+                  radiusMetres={radiusMetres} onRadiusChange={(radius) => { setRadiusMetres(radius); setSelected(null); }} />
+                {!destination && <SummaryCards summary={summary} state={state} />}
 
                 <div className="parking-section-heading">
-                  <div><h2>Streets worth a look</h2></div>
-                  <p>Choose a street to find it on the map.</p>
+                  <div><h2>{destination ? 'Parking near your destination' : 'Streets worth a look'}</h2></div>
+                  <p>{destination ? 'Only sensor bays inside your search radius.' : 'Choose a street to find it on the map.'}</p>
                 </div>
                 <div className="parking-workspace">
                   <div className="street-column" id="streets">
@@ -267,6 +283,7 @@ export default function App() {
                       onQueryChange={setQuery}
                       selected={selected}
                       onSelect={setSelected}
+                      nearby={destination ? { radiusMetres, sort: nearbySort, onSortChange: setNearbySort } : undefined}
                     />
                   </div>
                   <div className="map-column" id="parking-map">
@@ -275,10 +292,16 @@ export default function App() {
                       state={state}
                       selected={selected}
                       onSelect={setSelected}
+                      destination={destination}
+                      radiusMetres={radiusMetres}
                     />
                   </div>
                 </div>
 
+                {destination && <>
+                  <p className="parking-summary-scope">City-wide overview · all sensor bays, beyond this destination</p>
+                  <SummaryCards summary={summary} state={state} />
+                </>}
                 <div id="quality"><DataQualityPanel
                   summary={summary}
                   snapshot={snapshot}

@@ -40,6 +40,9 @@ export function Footer() {
             {ATTRIBUTION.licence}
           </a>
           .
+          {' '}Destination references from council{' '}
+          <a className="parking-footer-link" href="https://data.melbourne.vic.gov.au/explore/dataset/street-addresses/" target="_blank" rel="noreferrer">street addresses</a>{' '}
+          and{' '}<a className="parking-footer-link" href="https://data.melbourne.vic.gov.au/explore/dataset/landmarks-and-places-of-interest-including-schools-theatres-health-services-spor/" target="_blank" rel="noreferrer">landmarks</a>, also CC BY 4.0. Reference points may not be entrances; the directory may omit newer addresses.
         </p>
       </div>
 

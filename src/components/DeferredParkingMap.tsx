@@ -34,8 +34,8 @@ export function DeferredParkingMap(props: ParkingMapProps) {
   }, [requested]);
 
   useEffect(() => {
-    if (props.selected) setRequested(true);
-  }, [props.selected]);
+    if (props.selected || props.destination) setRequested(true);
+  }, [props.selected, props.destination]);
 
   useEffect(() => {
     if (!requested) return;

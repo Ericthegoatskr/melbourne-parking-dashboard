@@ -4,6 +4,8 @@
 
 Research last updated: 2026-09-08 (Australia/Melbourne)
 
+Roadmap updated: 2026-11-08 — destination-based nearby parking implemented.
+
 ## Mission
 
 Someone driving into central Melbourne should be able to answer three things within ten seconds, and trust the answers:
@@ -63,8 +65,9 @@ The next stage should run comprehension testing with 5–8 people unfamiliar wit
 
 ### P1 — make the answer actionable
 
+- **Implemented: destination-based nearby parking.** Submit a City of Melbourne address/place search or select one of eight bundled council landmarks. Filter individual bays within 250 m, 500 m or 1 km, then rank streets by distance or reported free bays, with occupied and silent streets following. Local results retain the sensor trust/freshness rules; summary cards remain city-wide, and clearing the destination restores the original exploration controls. Map distances are straight-line estimates, with no route or availability guarantee. Official directories need no keys; partial failures are disclosed and landmark choices survive directory outages. See [README](README.md#data-sources) for reference-data limits.
+- **Future: use the user's location**, with explicit browser permission, as another starting point for nearby ranking.
 - Filter signage by the current day and time, answering "how long can I park here right now" rather than only "this is a metered zone".
-- Rank streets near the user's location or destination instead of city-wide.
 - Use the council's historical data to show how empty a street usually is at this hour, kept clearly separate from the live reading.
 - Add a post-deploy freshness smoke check, and state it on the page when the source has been down for a sustained period.
 

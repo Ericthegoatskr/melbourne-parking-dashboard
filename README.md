@@ -34,6 +34,9 @@ That is not a theoretical flaw. Its concrete consequence is a driver heading for
 - A 30-minute sensor trust window. Bays that have not reported are counted as *not reporting* and never as free.
 - An expandable "what this dashboard excluded" panel showing the exclusions alongside what a naive count would have claimed.
 - Street rankings by most free bays or best odds. The odds ranking requires at least 5 reporting sensors, so a two-sensor street cannot top the list at 100%.
+- **Park near your destination:** submit an address or place name, then select a result; or choose one of eight bundled landmarks without a directory request. Search covers the City of Melbourne municipality, not all Greater Melbourne.
+- Choose a 250 m, 500 m or 1 km radius and rank nearby streets by **Nearest first** or **Most reported free**. Individual sensor bays are filtered before street counts are calculated; the summary cards remain city-wide. Streets with reported free bays come first, followed by occupied-only streets, then silent sensors. Distances and map pins use the nearest reporting free bay where available, otherwise the nearest reporting bay, then the nearest silent sensor.
+- Nearby results retain the 30-minute sensor trust window and all feed freshness rules: stale readings describe the past, and unavailable data produces no availability counts. **Clear destination** restores the original city-wide street search, sorting and map view.
 - A street-level map. Streets with nothing reporting are drawn hollow and grey, never coloured as though a bay were known to be free.
 - Signage restrictions named only where a street's zones agree; otherwise the actual mix is listed and the reader is sent to the sign.
 - An older snapshot may never overwrite a newer one. A failed fetch keeps the last valid reading and ages it honestly.
@@ -51,10 +54,14 @@ That is not a theoretical flaw. Its concrete consequence is a driver heading for
 | [`on-street-parking-bay-sensors`](https://data.melbourne.vic.gov.au/explore/dataset/on-street-parking-bay-sensors/information/) | Bay occupancy, sensor timestamps, coordinates |
 | [`parking-zones-linked-to-street-segments`](https://data.melbourne.vic.gov.au/explore/dataset/parking-zones-linked-to-street-segments/information/) | Zone → street name |
 | [`sign-plates-located-in-each-parking-zone`](https://data.melbourne.vic.gov.au/explore/dataset/sign-plates-located-in-each-parking-zone/information/) | Zone → signage restriction |
+| [`street-addresses`](https://data.melbourne.vic.gov.au/explore/dataset/street-addresses/) | Submitted address lookup and reference coordinates |
+| [`landmarks-and-places-of-interest-including-schools-theatres-health-services-spor`](https://data.melbourne.vic.gov.au/explore/dataset/landmarks-and-places-of-interest-including-schools-theatres-health-services-spor/) | Submitted place-name lookup and the eight bundled landmark coordinates |
 
 Data published by the City of Melbourne under [Creative Commons Attribution 4.0](https://creativecommons.org/licenses/by/4.0/). This is not a council service and is not endorsed by the council.
 
 The API is CORS-open and needs no API key, so the browser reads the official endpoint directly with no proxy in between.
+
+Destination lookup uses these two council directories only after Search is submitted. Requests time out after 10 seconds; partial results carry a retry notice, and bundled landmarks remain available if the directories fail. Address/place lookup does not change parking-feed freshness. The directories are limited reference data: their metadata reports modifications in 2021 and no update frequency, so new addresses and renamed places may be missing.
 
 ## Run locally
 
@@ -80,6 +87,8 @@ This runs the same four steps as CI, in the same order: `lint` → `typecheck` �
 For any change a user can see, also exercise a production build in a real browser: desktop and 375px mobile, all four data states, interaction, overflow, and the browser console. **A successful build is not acceptance.**
 
 For collection navigation, check all five same-tab links, the active Parking marker, mobile drawer focus/Escape and bottom-bar visibility, and map/footer access above the bottom bar. Navigation remains available even when parking data cannot be shown. The shared navigation component and stylesheet are mirrored in `melbourne-daily`; keep their destination order, labels and routes aligned.
+
+For destination search, submit `200 Collins Street`, explicitly select the address, then try a bundled landmark. Switch all three radii and both rankings; confirm the map's destination/radius, local street counts and unchanged city-wide cards. Clear the destination to restore the original controls. On desktop and mobile, also exercise a no-match query, directory failure/partial results, editing or selecting a landmark during a pending search, keyboard focus, stale/unavailable parking data and reduced motion. Empty nearby results mean no mapped sensor bays in that radius, not proof that no parking exists.
 
 ## Reference data
 
@@ -142,5 +151,6 @@ OpenStreetMap's tile usage policy does not permit heavy traffic. Before any real
 
 - Covers only bays with a working in-ground sensor. A street missing from this page may still have parking.
 - A sensor reading is a fact about the recent past. It is not a guarantee that a bay will still be free when you arrive.
+- Destination distances are straight-line estimates to sensor locations, not walking routes or travel times. Landmark points may be building reference points rather than entrances; no arrival-time availability is promised.
 - Street-level restrictions are a summary. The sign on the street always wins.
 - 583 bays (9.2%) cannot be matched to a street name and are grouped as "unmapped". They count toward the city totals but never appear as a recommendation.

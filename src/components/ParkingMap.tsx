@@ -3,6 +3,7 @@ import { LocateFixed, MapPinned } from 'lucide-react';
 import L from 'leaflet';
 import { mayClaimCurrent } from '../lib/freshness';
 import { describeStreetSignage } from '../lib/parkingModel';
+import { formatDistance, type Destination } from '../lib/nearbyParking';
 import type { FeedState, StreetAvailability } from '../lib/types';
 import 'leaflet/dist/leaflet.css';
 import './ParkingMap.css';
@@ -34,13 +35,19 @@ export interface ParkingMapProps {
   state: FeedState;
   selected: string | null;
   onSelect: (street: string | null) => void;
+  destination?: Destination | null;
+  radiusMetres?: number;
 }
 
-export function ParkingMap({ streets, state, selected, onSelect }: ParkingMapProps) {
+export function ParkingMap({ streets, state, selected, onSelect, destination = null, radiusMetres = 500 }: ParkingMapProps) {
   const containerRef = useRef<HTMLDivElement>(null);
   const mapRef = useRef<L.Map | null>(null);
   const layerRef = useRef<L.LayerGroup | null>(null);
+  const destinationLayerRef = useRef<L.LayerGroup | null>(null);
+  const destinationCircleRef = useRef<L.Circle | null>(null);
   const markersRef = useRef(new Map<string, L.CircleMarker>());
+  const streetsRef = useRef(streets);
+  streetsRef.current = streets;
   // Keep the latest callback without re-running the marker effect on each render.
   const onSelectRef = useRef(onSelect);
   onSelectRef.current = onSelect;
@@ -76,6 +83,7 @@ export function ParkingMap({ streets, state, selected, onSelect }: ParkingMapPro
     }).addTo(map);
 
     mapRef.current = map;
+    destinationLayerRef.current = L.layerGroup().addTo(map);
     layerRef.current = L.layerGroup().addTo(map);
     const markers = markersRef.current;
 
@@ -90,9 +98,61 @@ export function ParkingMap({ streets, state, selected, onSelect }: ParkingMapPro
       map.remove();
       mapRef.current = null;
       layerRef.current = null;
+      destinationLayerRef.current = null;
+      destinationCircleRef.current = null;
       markers.clear();
     };
   }, []);
+
+  const destinationId = destination?.id;
+  const destinationLabel = destination?.label;
+  const destinationLat = destination?.lat;
+  const destinationLon = destination?.lon;
+
+  // Reframe only when the chosen destination or search radius changes. Fresh
+  // sensor readings must not pull the map away from where someone is looking.
+  useEffect(() => {
+    const map = mapRef.current;
+    const layer = destinationLayerRef.current;
+    if (!map || !layer) return;
+    layer.clearLayers();
+    destinationCircleRef.current = null;
+    if (destinationLat === undefined || destinationLon === undefined) {
+      map.setView(MELBOURNE_CBD, 14, { animate: !prefersReducedMotion() });
+      return;
+    }
+
+    const point: L.LatLngTuple = [destinationLat, destinationLon];
+    const circle = L.circle(point, {
+      radius: radiusMetres,
+      color: '#805115',
+      weight: 1.5,
+      dashArray: '6 6',
+      fillColor: '#edbd69',
+      fillOpacity: 0.08,
+      interactive: false,
+    }).addTo(layer);
+    destinationCircleRef.current = circle;
+    const label = `Destination: ${destinationLabel ?? 'Selected place'}`;
+    const marker = L.marker(point, {
+      icon: L.divIcon({
+        className: 'parking-destination-marker',
+        html: '<svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 10c0 5-8 12-8 12S4 15 4 10a8 8 0 1 1 16 0Z"/><circle cx="12" cy="10" r="3"/></svg>',
+        iconSize: [40, 44],
+        iconAnchor: [20, 44],
+        tooltipAnchor: [0, -38],
+        popupAnchor: [0, -38],
+      }),
+      title: label,
+      alt: label,
+      keyboard: true,
+      zIndexOffset: 1000,
+    }).addTo(layer);
+    marker.getElement()?.setAttribute('aria-label', label);
+    marker.bindTooltip(escapeHtml(label), { direction: 'top', className: 'parking-destination-tooltip' });
+    marker.bindPopup(`<strong>${escapeHtml(label)}</strong><br/><span>${formatDistance(radiusMetres)} search radius · straight-line distance</span>`);
+    map.fitBounds(circle.getBounds(), { padding: [24, 24], maxZoom: 16, animate: !prefersReducedMotion() });
+  }, [destinationId, destinationLabel, destinationLat, destinationLon, radiusMetres]);
 
   useEffect(() => {
     const layer = layerRef.current;
@@ -108,6 +168,8 @@ export function ParkingMap({ streets, state, selected, onSelect }: ParkingMapPro
       const silent = street.vacancyRate === null;
       const radius = 6 + Math.sqrt(street.total / maxTotal) * 16;
       const signage = describeStreetSignage(street);
+      const distanceMetres = 'distanceMetres' in street && typeof street.distanceMetres === 'number'
+        ? street.distanceMetres : null;
 
       const marker = L.circleMarker([street.lat, street.lon], {
         radius,
@@ -124,6 +186,7 @@ export function ParkingMap({ streets, state, selected, onSelect }: ParkingMapPro
             ? `<span>No sensor reporting — availability unknown</span>`
             : `<span>${street.vacant} of ${street.vacant + street.occupied} bays free` +
               `${current ? '' : ' at last reading'}</span>`) +
+          (distanceMetres !== null ? `<br/><span>${formatDistance(distanceMetres)} straight line · counts within search radius</span>` : '') +
           (street.notReporting > 0 ? `<br/><span>${street.notReporting} sensors silent</span>` : '') +
           (signage ? `<br/><span>${escapeHtml(signage)}</span>` : ''),
       );
@@ -147,26 +210,31 @@ export function ParkingMap({ streets, state, selected, onSelect }: ParkingMapPro
   useEffect(() => {
     const map = mapRef.current;
     if (!map || !selected) return;
-    const target = streets.find((street) => street.street === selected);
+    const target = streetsRef.current.find((street) => street.street === selected);
     if (target) map.flyTo([target.lat, target.lon], Math.max(map.getZoom(), 16), {
       duration: 0.6,
       animate: !prefersReducedMotion(),
     });
-  }, [selected, streets]);
+  }, [selected]);
 
   return (
     <section className="card parking-map-card" aria-labelledby="parking-map-title">
       <div className="parking-map-heading">
         <div>
           <h2 id="parking-map-title"><MapPinned size={18} aria-hidden /> Parking map</h2>
-          <p>Street-level view · City of Melbourne</p>
+          <p>{destination ? `Near ${destination.label} · ${formatDistance(radiusMetres)} radius` : 'Street-level view · City of Melbourne'}</p>
         </div>
         <button
           type="button"
           className="parking-map-reset"
           onClick={() => {
             onSelectRef.current(null);
-            mapRef.current?.closePopup().setView(MELBOURNE_CBD, 14, { animate: !prefersReducedMotion() });
+            const map = mapRef.current;
+            if (!map) return;
+            map.closePopup();
+            const circle = destinationCircleRef.current;
+            if (circle) map.fitBounds(circle.getBounds(), { padding: [24, 24], maxZoom: 16, animate: !prefersReducedMotion() });
+            else map.setView(MELBOURNE_CBD, 14, { animate: !prefersReducedMotion() });
           }}
         >
           <LocateFixed size={15} aria-hidden /> Reset view
@@ -176,7 +244,7 @@ export function ParkingMap({ streets, state, selected, onSelect }: ParkingMapPro
         ref={containerRef}
         className="parking-map-canvas"
         role="application"
-        aria-label="Map of on-street parking availability by street"
+        aria-label={destination ? `Map of parking near ${destination.label}, within ${formatDistance(radiusMetres)}` : 'Map of on-street parking availability by street'}
       />
       <div className="parking-map-key">
         <p>{mayClaimCurrent(state) ? 'Share of reporting bays free' : 'Share free at last reading'}</p>
@@ -185,8 +253,11 @@ export function ParkingMap({ streets, state, selected, onSelect }: ParkingMapPro
           <li><i className="map-key-some" aria-hidden />12–&lt;30% free</li>
           <li><i className="map-key-few" aria-hidden />&lt;12% free</li>
           <li><i className="map-key-silent" aria-hidden />No signal</li>
+          {destination && <li><i className="map-key-destination" aria-hidden />Destination</li>}
         </ul>
-        <small>Larger circles represent more sensor bays. Select a street for its reading and signs.</small>
+        <small>{destination
+          ? `Only bays inside the dashed search radius are counted${mayClaimCurrent(state) ? '' : ', using the last reading'}. Each street circle marks its nearest reporting free bay, or its nearest reporting bay if none is free. Silent streets use their nearest sensor. Distances are straight line, not walking routes.`
+          : 'Larger circles represent more sensor bays. Select a street for its reading and signs.'}</small>
       </div>
     </section>
   );
