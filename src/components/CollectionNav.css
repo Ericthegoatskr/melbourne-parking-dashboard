@@ -17,8 +17,8 @@
 .page-section-nav .nav-dot, .parking-sidebar .page-section-nav > a.active::after { display: none; }
 .sidebar .sidebar-bottom, .parking-sidebar .sidebar-bottom { padding-top: 23px; gap: 15px; }
 .collection-nav--mobile { display: none; }
-.collection-theme-switch { display: flex; align-items: center; gap: 9px; width: 100%; min-height: 56px; padding: 11px 10px; margin-top: 13px; border: 1px solid var(--border); border-radius: 12px; background: var(--surface); color: var(--ink); text-align: left; cursor: pointer; }
-.collection-theme-swatches { display: flex; flex: 0 0 27px; width: 27px; height: 27px; overflow: hidden; border: 1px solid #7f839255; border-radius: 50%; transform: rotate(-25deg); }
+.collection-theme-switch { display: flex; align-items: center; gap: 6px; width: 100%; min-height: 56px; padding: 11px 8px; margin-top: 13px; border: 1px solid var(--border); border-radius: 12px; background: var(--surface); color: var(--ink); text-align: left; cursor: pointer; }
+.collection-theme-swatches { display: flex; flex: 0 0 20px; width: 20px; height: 20px; overflow: hidden; border: 1px solid #7f839255; border-radius: 50%; transform: rotate(-25deg); }
 .collection-theme-swatches i { flex: 1; background: var(--swatch-base, #14213d); }
 .collection-theme-swatches i:nth-child(2) { background: var(--swatch-surface, #f4ede0); }
 .collection-theme-swatches i:nth-child(3) { background: var(--swatch-accent, #ff6b5b); }
