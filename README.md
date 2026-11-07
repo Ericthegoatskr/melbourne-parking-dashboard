@@ -38,7 +38,7 @@ That is not a theoretical flaw. Its concrete consequence is a driver heading for
 - Signage restrictions named only where a street's zones agree; otherwise the actual mix is listed and the reader is sent to the sign.
 - An older snapshot may never overwrite a newer one. A failed fetch keeps the last valid reading and ages it honestly.
 - An open tab ages itself, without depending on a network refresh or an unthrottled timer.
-- A shared visual style with [Melbourne Daily](https://ericthegoatskr.github.io/melbourne-daily/): navy `#14213D`, cream `#F4EDE0` and coral `#FF6B5B`. **Colour theme** in the sidebar/mobile menu restores the original light palette; the choice is shared across all five dashboards on this browser. Availability colours retain their meaning.
+- A shared layout and navigation with [Melbourne Daily](https://ericthegoatskr.github.io/melbourne-daily/), with a dedicated **Walnut & amber** parking palette: walnut `#2C241B`, warm ivory `#FFF3DF` and amber `#EDBD69`. **Colour theme** in the sidebar/mobile menu restores the original light palette; the featured/light preference is shared across all five dashboards on this browser, while each destination keeps its own colours. Availability colours and map markers retain their meaning.
 - Finite card entrance and value-change animations, with motion disabled when the system requests reduced motion.
 - Responsive from desktop down to 375px, with a mobile navigation drawer and no horizontal overflow.
 - The same five-destination navigation as the other dashboards: Home, Parking, Weather & UV, Air quality and Transport. Desktop uses the sidebar; mobile has a bottom bar with safe-area spacing. The current dashboard is highlighted, while local map/street/source links remain under “On this page”.

@@ -1,113 +1,110 @@
-/* Optional collection palette. Data states keep their established semantic colours. */
+/* Parking uses walnut surfaces and amber actions. Data states keep their established semantic colours. */
 html[data-theme="navy"] .parking-intro h1,
 html[data-theme="navy"] .parking-section-heading h2 {
-  color: #f4ede0;
+  color: var(--palette-text);
 }
 html[data-theme="navy"] .intro-copy,
-html[data-theme="navy"] .parking-intro .eyebrow,
-html[data-theme="navy"] .parking-section-heading .eyebrow,
 html[data-theme="navy"] .parking-section-heading p {
-  color: #c5ccda;
+  color: var(--palette-muted);
 }
-html[data-theme="navy"] .parking-intro .eyebrow > svg,
 html[data-theme="navy"] .parking-intro h1 > span {
-  color: #ff6b5b;
+  color: var(--palette-accent);
 }
 html[data-theme="navy"] .intro-actions,
 html[data-theme="navy"] .parking-retry {
-  background: #ff6b5b;
-  border-color: #ff6b5b;
-  color: #14213d;
+  background: var(--palette-accent);
+  border-color: var(--palette-accent);
+  color: var(--palette-ink);
 }
 html[data-theme="navy"] .intro-actions:hover,
 html[data-theme="navy"] .parking-retry:hover {
-  background: #ff8b7e;
-  border-color: #ff8b7e;
+  background: var(--palette-accent-hover);
+  border-color: var(--palette-accent-hover);
 }
 html[data-theme="navy"] .parking-section-heading > a {
-  background: #243451;
-  border-color: #51617d;
-  color: #f4ede0;
+  background: var(--palette-panel);
+  border-color: var(--palette-border);
+  color: var(--palette-text);
 }
 html[data-theme="navy"] .parking-section-heading > a:hover {
-  background: #304362;
+  background: var(--palette-hover);
 }
 
 html[data-theme="navy"] .parking-summary-tile.card {
-  border-color: #ded4c5;
+  border-color: var(--palette-line);
 }
 html[data-theme="navy"] .parking-summary-grid:not(.parking-summary--historical) .parking-summary-tile--free.card,
 html[data-theme="navy"] .parking-summary-tile--occupied.card,
 html[data-theme="navy"] .parking-summary-tile--coverage.card {
-  background: #f4ede0;
+  background: var(--palette-surface);
 }
 html[data-theme="navy"] .parking-summary-icon {
-  background: #e8e0d2;
+  background: var(--palette-icon);
 }
 html[data-theme="navy"] .parking-summary-tile--occupied .parking-summary-icon {
-  color: #35425a;
+  color: var(--palette-ink-soft);
 }
 html[data-theme="navy"] .parking-summary-tile--coverage .parking-summary-icon {
-  background: #ffe1d7;
-  color: #a83426;
+  background: var(--palette-selection);
+  color: var(--palette-action);
 }
 
 html[data-theme="navy"] .freshness-action,
 html[data-theme="navy"] .parking-source-link,
 html[data-theme="navy"] .parking-map-reset {
-  background: #f4ede0;
-  border-color: #c5bcaf;
-  color: #14213d;
+  background: var(--palette-surface);
+  border-color: var(--palette-line);
+  color: var(--palette-ink);
 }
 html[data-theme="navy"] .freshness-action:hover:not(:disabled),
 html[data-theme="navy"] .parking-source-link:hover,
 html[data-theme="navy"] .parking-map-reset:hover {
-  background: #ffe1d7;
-  border-color: #cc8a7e;
-  color: #7e2c23;
+  background: var(--palette-selection);
+  border-color: var(--palette-selection-line);
+  color: var(--palette-action);
 }
 html[data-theme="navy"] .freshness-legend {
-  color: #c5ccda;
+  color: var(--palette-muted);
 }
 html[data-theme="navy"] .freshness-legend strong {
-  color: #f4ede0;
+  color: var(--palette-text);
 }
 
 html[data-theme="navy"] .street-search input {
-  background: #fffaf0;
-  border-color: #c5bcaf;
+  background: var(--palette-raised);
+  border-color: var(--palette-line);
 }
 html[data-theme="navy"] .street-search > svg {
-  color: #596479;
+  color: var(--palette-secondary);
 }
 html[data-theme="navy"] .street-search input:focus {
-  border-color: #a83426;
-  box-shadow: 0 0 0 3px #ff6b5b26;
+  border-color: var(--palette-action);
+  box-shadow: 0 0 0 3px var(--palette-selection);
 }
 html[data-theme="navy"] .street-sorts {
-  background: #e7dfd1;
-  border-color: #d4c9b8;
+  background: var(--palette-subtle);
+  border-color: var(--palette-line);
 }
 html[data-theme="navy"] .street-sorts button[aria-pressed="true"] {
-  background: #14213d;
-  color: #f4ede0;
+  background: var(--palette-ink);
+  color: var(--palette-text);
 }
 html[data-theme="navy"] .street-sorts button:hover:not([aria-pressed="true"]) {
-  color: #a83426;
+  color: var(--palette-action);
 }
 html[data-theme="navy"] .street-list {
-  scrollbar-color: #b1a99c transparent;
+  scrollbar-color: var(--palette-secondary) transparent;
 }
 html[data-theme="navy"] .street-list > li {
-  border-bottom-color: #ded4c5;
+  border-bottom-color: var(--palette-line);
 }
 html[data-theme="navy"] .street-row:hover {
-  background: #ece3d6;
+  background: var(--palette-subtle);
 }
 html[data-theme="navy"] .street-row--selected,
 html[data-theme="navy"] .street-row--selected:hover {
-  background: #ffe1d7;
-  border-color: #cc8a7e;
+  background: var(--palette-selection);
+  border-color: var(--palette-selection-line);
 }
 html[data-theme="navy"] .street-no-signal.chip {
   background: #e4e0d8;
@@ -115,70 +112,74 @@ html[data-theme="navy"] .street-no-signal.chip {
 }
 html[data-theme="navy"] .street-row-figures--historical .street-free-count,
 html[data-theme="navy"] .street-row--silent .street-free-count {
-  color: #596479;
+  color: var(--palette-secondary);
 }
 html[data-theme="navy"] .street-vacancy-bar {
-  background: #e5dccd;
+  background: var(--palette-line);
 }
 html[data-theme="navy"] .street-vacancy-bar--unknown {
   background: #cfc9be;
 }
 html[data-theme="navy"] .street-empty {
-  background: #ede5d8;
-  border-color: #c5bcaf;
+  background: var(--palette-subtle);
+  border-color: var(--palette-line);
 }
 html[data-theme="navy"] .quality-panel.card,
 html[data-theme="navy"] .parking-loading.card {
-  background: #f4ede0;
+  background: var(--palette-surface);
 }
 html[data-theme="navy"] .quality-details {
-  border-top-color: #dcd4c6;
+  border-top-color: var(--palette-line);
 }
 html[data-theme="navy"] .quality-term {
-  color: #596479;
+  color: var(--palette-secondary);
 }
 
 html[data-theme="navy"] .parking-map-placeholder {
-  background: #e8e0d2;
+  background: var(--palette-subtle);
 }
 html[data-theme="navy"] .parking-map-key {
-  background: #f4ede0;
+  background: var(--palette-surface);
 }
 /* Keep the basemap and availability marker colours intact. */
 html[data-theme="navy"] .parking-map-canvas.leaflet-container .leaflet-popup-content-wrapper,
 html[data-theme="navy"] .parking-map-canvas.leaflet-container .leaflet-popup-tip,
 html[data-theme="navy"] .parking-map-canvas.leaflet-container .leaflet-bar a {
-  background: #fffaf0;
-  color: #14213d;
+  background: var(--palette-raised);
+  color: var(--palette-ink);
 }
 html[data-theme="navy"] .parking-map-canvas.leaflet-container .leaflet-bar a:hover {
-  background: #ffe1d7;
-  color: #7e2c23;
+  background: var(--palette-selection);
+  color: var(--palette-action);
 }
 html[data-theme="navy"] .parking-map-canvas.leaflet-container .leaflet-bar a.leaflet-disabled {
-  background: #e8e0d2;
-  color: #596479;
+  background: var(--palette-icon);
+  color: var(--palette-ink-soft);
 }
 html[data-theme="navy"] .parking-map-canvas.leaflet-container .leaflet-control-zoom {
-  border-color: #c5bcaf;
+  border-color: var(--palette-line);
 }
 html[data-theme="navy"] .parking-map-canvas.leaflet-container .leaflet-control-attribution {
-  background: #f4ede0f2;
+  background: var(--palette-surface);
 }
 html[data-theme="navy"] .parking-map-canvas.leaflet-container .leaflet-control-attribution a {
-  color: #a83426;
+  color: var(--palette-action);
 }
 
 html[data-theme="navy"] .parking-footer,
 html[data-theme="navy"] .parking-footer-copy,
 html[data-theme="navy"] .parking-footer-limitations,
 html[data-theme="navy"] .parking-footer-note {
-  color: #c5ccda;
-  border-color: #f4ede02b;
+  color: var(--palette-muted);
+  border-color: var(--palette-border);
 }
 html[data-theme="navy"] .parking-footer-heading {
-  color: #f4ede0;
+  color: var(--palette-text);
 }
 html[data-theme="navy"] .parking-footer-link {
-  color: #ff9c8f;
+  color: var(--palette-active-text);
 }
+
+/* Source attribution stays beneath the heading instead of competing with it. */
+.parking-intro .parking-source-note { margin-top: 5px; font-size: 11px; }
+html[data-theme="navy"] .parking-intro .parking-source-note { color: var(--palette-muted); }

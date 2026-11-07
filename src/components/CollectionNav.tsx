@@ -29,7 +29,7 @@ export default function CollectionNav({ current, placement, onNavigate, hidden =
           {current === id && <span className="collection-current-dot" aria-hidden="true" />}
         </a>
       ))}
-      {placement === "sidebar" && <ThemeSwitcher palette={current === "weather" ? "sunset" : "navy"} />}
+      {placement === "sidebar" && <ThemeSwitcher palette={({ home: "navy", parking: "amber", weather: "sunset", air: "forest", transport: "iris" } as const)[current]} />}
     </nav>
   );
 }

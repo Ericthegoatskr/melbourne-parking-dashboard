@@ -1,0 +1,117 @@
+/* Destination identity, independent of the shared featured/light preference.
+   Keep identical in both repositories. Semantic data colours live elsewhere. */
+:root {
+  --palette-canvas: #14213d;
+  --palette-panel: #20314f;
+  --palette-hover: #263651;
+  --palette-border: #3c4a63;
+  --palette-text: #f4ede0;
+  --palette-muted: #c0c9d7;
+  --palette-accent: #ff6b5b;
+  --palette-accent-hover: #ff897b;
+  --palette-active: #3a2c40;
+  --palette-active-text: #ff9689;
+  --palette-ink: #14213d;
+  --palette-ink-soft: #35425a;
+  --palette-secondary: #596479;
+  --palette-surface: #f4ede0;
+  --palette-raised: #fff9f0;
+  --palette-subtle: #eae3d7;
+  --palette-line: #dcd4c6;
+  --palette-action: #a83426;
+  --palette-selection: #ffe1d7;
+  --palette-selection-line: #d9a79c;
+  --palette-icon: #e7dfd2;
+}
+html[data-page="parking"] {
+  --palette-canvas: #2c241b;
+  --palette-panel: #3a3024;
+  --palette-hover: #493c2b;
+  --palette-border: #67563f;
+  --palette-text: #fff3df;
+  --palette-muted: #d8c5a7;
+  --palette-accent: #edbd69;
+  --palette-accent-hover: #f5cd8c;
+  --palette-active: #51402a;
+  --palette-active-text: #f6d595;
+  --palette-ink: #34291b;
+  --palette-ink-soft: #51432f;
+  --palette-secondary: #746046;
+  --palette-surface: #fff3df;
+  --palette-raised: #fff9ef;
+  --palette-subtle: #eee0c9;
+  --palette-line: #ddccb0;
+  --palette-action: #805115;
+  --palette-selection: #f7dfb1;
+  --palette-selection-line: #cba86c;
+  --palette-icon: #e8d8bd;
+}
+html[data-page="weather"] {
+  --palette-canvas: #210c22;
+  --palette-panel: #35122e;
+  --palette-hover: #501c40;
+  --palette-border: #5c334c;
+  --palette-text: #fff1e8;
+  --palette-muted: #dfbbc9;
+  --palette-accent: #ff754b;
+  --palette-accent-hover: #ff976b;
+  --palette-active: #501c40;
+  --palette-active-text: #ffac8d;
+  --palette-ink: #32132b;
+  --palette-ink-soft: #513447;
+  --palette-secondary: #705260;
+  --palette-surface: #fff1e8;
+  --palette-raised: #fff9f3;
+  --palette-subtle: #f3deda;
+  --palette-line: #e6cfc7;
+  --palette-action: #a93228;
+  --palette-selection: #f9d7ca;
+  --palette-selection-line: #c28a80;
+  --palette-icon: #f3deda;
+}
+html[data-page="air"] {
+  --palette-canvas: #102e29;
+  --palette-panel: #193f37;
+  --palette-hover: #244e42;
+  --palette-border: #43685b;
+  --palette-text: #edf5e9;
+  --palette-muted: #b5d3c5;
+  --palette-accent: #9cdbbb;
+  --palette-accent-hover: #b5e7ce;
+  --palette-active: #294e40;
+  --palette-active-text: #b5e7ce;
+  --palette-ink: #18372d;
+  --palette-ink-soft: #365346;
+  --palette-secondary: #496756;
+  --palette-surface: #edf5e9;
+  --palette-raised: #f7fbf2;
+  --palette-subtle: #dde9d8;
+  --palette-line: #c9d9c5;
+  --palette-action: #276246;
+  --palette-selection: #cfe9d6;
+  --palette-selection-line: #89b89a;
+  --palette-icon: #dce8d7;
+}
+html[data-page="transport"] {
+  --palette-canvas: #252342;
+  --palette-panel: #343052;
+  --palette-hover: #454064;
+  --palette-border: #625b84;
+  --palette-text: #f3f0ff;
+  --palette-muted: #c5c0e4;
+  --palette-accent: #bfb2ff;
+  --palette-accent-hover: #d5cbff;
+  --palette-active: #494166;
+  --palette-active-text: #d5cbff;
+  --palette-ink: #2b2848;
+  --palette-ink-soft: #4d4769;
+  --palette-secondary: #62597b;
+  --palette-surface: #f3f0ff;
+  --palette-raised: #faf8ff;
+  --palette-subtle: #e4dff3;
+  --palette-line: #d4cbe6;
+  --palette-action: #5f439c;
+  --palette-selection: #e5d9ff;
+  --palette-selection-line: #b7a2d7;
+  --palette-icon: #e3ddef;
+}

@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
-import { ArrowUpRight, CircleParking, Database, LayoutGrid, ListFilter, Map, Menu, ShieldCheck, X } from 'lucide-react';
+import { ArrowUpRight, Database, LayoutGrid, ListFilter, Map, Menu, ShieldCheck, X } from 'lucide-react';
 import { FreshnessBanner, FreshnessLegend } from './components/FreshnessBanner';
 import { SummaryCards } from './components/SummaryCards';
 import { StreetList } from './components/StreetList';
@@ -218,9 +218,9 @@ export default function App() {
       <main id="main" className="parking-main">
         <section id="overview" className="parking-intro">
           <div className="intro-copy">
-            <span className="eyebrow"><CircleParking size={14} aria-hidden="true" />CITY OF MELBOURNE OPEN DATA</span>
             <h1>Melbourne street parking<span>.</span></h1>
             <p>Find your next spot, with a clearer picture of what is reporting.</p>
+            <p className="parking-source-note">City of Melbourne open data</p>
           </div>
           {canExplore
             ? <a className="intro-actions" href="#parking-map" onClick={() => navigate('parking-map')}><Map size={17} aria-hidden="true" />Explore the map<ArrowUpRight size={16} aria-hidden="true" /></a>
@@ -253,7 +253,7 @@ export default function App() {
                 <SummaryCards summary={summary} state={state} />
 
                 <div className="parking-section-heading">
-                  <div><span className="eyebrow">EXPLORE THE NEIGHBOURHOOD</span><h2>Streets worth a look</h2></div>
+                  <div><h2>Streets worth a look</h2></div>
                   <p>Choose a street to find it on the map.</p>
                 </div>
                 <div className="parking-workspace">
