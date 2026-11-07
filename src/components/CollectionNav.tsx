@@ -1,5 +1,6 @@
 import { CarFront, CloudSun, LayoutGrid, TrainFront, Wind } from "lucide-react";
 import "./CollectionNav.css";
+import ThemeSwitcher from "./ThemeSwitcher";
 
 // Keep this component and its stylesheet identical in both dashboard repositories.
 // The collection shares one GitHub Pages origin, including the separate parking app.
@@ -28,6 +29,7 @@ export default function CollectionNav({ current, placement, onNavigate, hidden =
           {current === id && <span className="collection-current-dot" aria-hidden="true" />}
         </a>
       ))}
+      {placement === "sidebar" && <ThemeSwitcher />}
     </nav>
   );
 }

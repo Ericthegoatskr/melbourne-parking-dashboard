@@ -1,0 +1,63 @@
+/* Reference palette: navy #14213D, cream #F4EDE0, coral #FF6B5B.
+   Keep this shared frame identical in both collection repositories. */
+:root[data-theme="navy"] {
+  color-scheme: dark;
+  --ink: #14213d;
+  --ink-soft: #35425a;
+  --muted: #596479;
+  --accent: #ff6b5b;
+  --accent-dark: #a83426;
+  --accent-soft: #ffe1d7;
+  --lavender: #e9e5dc;
+  --lavender-ink: #3f5275;
+  --peach: #f1e0ce;
+  --surface: #f4ede0;
+  --canvas: #14213d;
+  --border: #dcd4c6;
+  --shadow-card: 0 8px 28px #060e1e1c;
+  --shadow-hover: 0 14px 34px #060e1e30;
+  background: #14213d;
+}
+html[data-theme="navy"] :is(.app-shell, .parking-shell) {
+  background: radial-gradient(ellipse 80% 470px at 85% 0%, #ff6b5b18, transparent 85%), radial-gradient(ellipse 65% 520px at 5% 8%, #29416770, transparent), #14213d;
+}
+html[data-theme="navy"] :is(.sidebar, .parking-sidebar, .topbar, .parking-topbar, .collection-nav--mobile) {
+  --ink: #f4ede0;
+  --ink-soft: #e0dfde;
+  --muted: #b9c3d5;
+  --accent-dark: #ff9689;
+  --accent-soft: #ff6b5b1c;
+  --lavender-ink: #dedacc;
+  --surface: #1c2c49;
+  --border: #35435b;
+  background: #14213d;
+  border-color: #35435b;
+  color: #f4ede0;
+  backdrop-filter: none;
+}
+html[data-theme="navy"] :is(.brand-mark, .parking-brand .brand-mark) { background: #ff6b5b; color: #14213d; box-shadow: 0 5px 20px #ff6b5b25; }
+html[data-theme="navy"] .brand-mark > span { color: #14213d; }
+html[data-theme="navy"] :is(.local-clock, .parking-clock) { background: #1c2c49; border-color: #35435b; color: #f4ede0; }
+html[data-theme="navy"] .collection-nav--sidebar > .collection-link:hover,
+html[data-theme="navy"] .collection-nav--mobile > .collection-link:hover,
+html[data-theme="navy"] :is(.sidebar, .parking-sidebar) .page-section-nav > a:hover,
+html[data-theme="navy"] :is(.sidebar, .parking-sidebar) .page-section-nav > a[aria-current],
+html[data-theme="navy"] :is(.menu-button, .drawer-close):hover { background: #263651; color: #f4ede0; }
+html[data-theme="navy"] .collection-nav--sidebar > .collection-link[aria-current="page"],
+html[data-theme="navy"] .collection-nav--mobile > .collection-link[aria-current="page"] { background: #ff6b5b1c; color: #ff9689; }
+html[data-theme="navy"] :is(.intro h1, .section-heading h2) { color: #f4ede0; }
+html[data-theme="navy"] :is(.intro p, .intro .eyebrow, .section-heading > span, .section-heading p, .section-heading .eyebrow) { color: #c0c9d7; }
+html[data-theme="navy"] .location-picker { color-scheme: light; background: #f4ede0; border-color: #dcd4c6; }
+html[data-theme="navy"] .location-picker select { color: #14213d; }
+html[data-theme="navy"] .refresh-button { background: #ff6b5b; border-color: #ff6b5b; color: #14213d; box-shadow: 0 4px 16px #ff6b5b18; }
+html[data-theme="navy"] .refresh-button:hover:not(:disabled) { background: #ff897b; border-color: #ff897b; }
+html[data-theme="navy"] :is(.page-footer, .wx-footer, .aq-footer, .tr-footer) { color: #c0c9d7; }
+html[data-theme="navy"] :is(.page-footer, .wx-footer, .aq-footer, .tr-footer) a { color: #f4ede0; }
+html[data-theme="navy"] .card { color-scheme: light; color: #14213d; }
+html[data-theme="navy"] :is(button, a, select, input, summary, [tabindex]):focus-visible { outline-color: #a83426; }
+html[data-theme="navy"] :is(.sidebar, .parking-sidebar, .topbar, .parking-topbar, .collection-nav--mobile) :focus-visible { outline-color: #f4ede0; }
+html[data-theme="navy"] :is(.summary-tile--uv, .summary-tile--air):focus-visible,
+html[data-theme="navy"] :is(.intro, .parking-intro, .tr-hero, .explore-card, .page-footer, .wx-footer, .aq-footer, .tr-footer, .parking-footer) :focus-visible { outline-color: #ff9689; }
+html[data-theme="navy"] .location-picker select:focus-visible { outline-color: #a83426; }
+html[data-theme="navy"] :is(.menu-backdrop, .parking-backdrop) { background: #060d1bcc; }
+html[data-theme="navy"] ::selection { background: #ff6b5b; color: #14213d; }

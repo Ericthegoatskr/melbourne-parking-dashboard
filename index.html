@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="en-AU">
+<html lang="en-AU" data-theme="navy">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -10,6 +10,15 @@
     />
     <meta name="color-scheme" content="light" />
     <meta name="theme-color" content="#f7f6fa" />
+    <script>
+      // Apply the shared preference before styles paint either Pages app.
+      (() => {
+        let theme = "navy";
+        try { if (localStorage.getItem("melbourne-collection:theme") === "light") theme = "light"; } catch {}
+        document.documentElement.dataset.theme = theme;
+        document.querySelector('meta[name="theme-color"]').content = theme === "navy" ? "#14213D" : "#f7f6fa";
+      })();
+    </script>
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <link rel="preconnect" href="https://data.melbourne.vic.gov.au" />
     <link rel="preconnect" href="https://fonts.googleapis.com" />

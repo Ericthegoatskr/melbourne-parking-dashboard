@@ -37,7 +37,7 @@ City of Melbourne 是 source of truth，而且已經把感測器資料完整開�
 - 標誌牌限制只在整條街無歧義時具名，否則列出實際存在的種類並導向現場標誌。
 - 較舊的快照不得覆寫較新的；抓取失敗保留上一份有效讀數並照實老化。
 - 開著的分頁自行老化，不依賴網路刷新或未被節流的計時器。
-- 與 [Melbourne Daily](https://ericthegoatskr.github.io/melbourne-daily/) 共用視覺風格及設計變數：淡薰衣草色背景、白色卡片與橘色重點色。
+- 與 [Melbourne Daily](https://ericthegoatskr.github.io/melbourne-daily/) 共用海軍藍 `#14213D`、奶油白 `#F4EDE0` 與珊瑚橘 `#FF6B5B` 配色。側欄／手機選單的 **Colour theme** 可切回原本的淺色版，同一瀏覽器會記住五個看板共用的選擇；停車狀態色保留原本意義。
 - 卡片進場與數值變更採用播放後即停止的動畫；系統開啟「減少動態效果」時停用動畫。
 - Desktop 到 375px mobile responsive，手機提供抽屜式導覽；無水平溢出。
 - 地圖程式、隨包附帶的 Leaflet 樣式與圖磚會在接近地圖時才載入，讓停車摘要先顯示；地圖連結、選取街道與手動載入按鈕也能啟動。載入失敗時保留街道資料並提供重試。手機主要控制項使用至少 44px 點擊範圍，街道清單滑到底後可繼續捲動整頁。
