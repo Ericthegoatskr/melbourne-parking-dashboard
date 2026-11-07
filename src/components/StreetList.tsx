@@ -78,7 +78,7 @@ export const StreetList = memo(function StreetList({ streets, state, sort, onSor
       )}
 
       {streets.length === 0 ? (
-        <p className="street-empty">{nearby ? 'No mapped sensor bays in this radius. Try a larger radius or another destination. This does not mean there is no parking nearby.' : `No street matches “${query}”. Try a shorter search.`}</p>
+        <p className="street-empty">{nearby ? 'No mapped sensor bays in this radius. Coverage is limited to the City of Melbourne. Try a larger radius or a destination in the city. This does not mean there is no parking nearby.' : `No street matches “${query}”. Try a shorter search.`}</p>
       ) : (
         <ul className="street-list">
           {streets.map((street) => (

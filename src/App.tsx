@@ -269,7 +269,7 @@ export default function App() {
                 {!destination && <SummaryCards summary={summary} state={state} />}
 
                 <div className="parking-section-heading">
-                  <div><h2>{destination ? 'Parking near your destination' : 'Streets worth a look'}</h2></div>
+                  <div><h2>{destination?.deviceLocation ? 'Parking near your location' : destination ? 'Parking near your destination' : 'Streets worth a look'}</h2></div>
                   <p>{destination ? 'Only sensor bays inside your search radius.' : 'Choose a street to find it on the map.'}</p>
                 </div>
                 <div className="parking-workspace">
@@ -299,7 +299,7 @@ export default function App() {
                 </div>
 
                 {destination && <>
-                  <p className="parking-summary-scope">City-wide overview · all sensor bays, beyond this destination</p>
+                  <p className="parking-summary-scope">City-wide overview · all sensor bays, beyond this search area</p>
                   <SummaryCards summary={summary} state={state} />
                 </>}
                 <div id="quality"><DataQualityPanel

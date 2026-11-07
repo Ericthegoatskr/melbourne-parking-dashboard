@@ -4,7 +4,7 @@
 
 Research last updated: 2026-09-08 (Australia/Melbourne)
 
-Roadmap updated: 2026-11-08 — destination-based nearby parking implemented.
+Roadmap updated: 2026-11-08 — destination and current-location nearby parking implemented.
 
 ## Mission
 
@@ -66,7 +66,7 @@ The next stage should run comprehension testing with 5–8 people unfamiliar wit
 ### P1 — make the answer actionable
 
 - **Implemented: destination-based nearby parking.** Submit a City of Melbourne address/place search or select one of eight bundled council landmarks. Filter individual bays within 250 m, 500 m or 1 km, then rank streets by distance or reported free bays, with occupied and silent streets following. Local results retain the sensor trust/freshness rules; summary cards remain city-wide, and clearing the destination restores the original exploration controls. Map distances are straight-line estimates, with no route or availability guarantee. Official directories need no keys; partial failures are disclosed and landmark choices survive directory outages. See [README](README.md#data-sources) for reference-data limits.
-- **Future: use the user's location**, with explicit browser permission, as another starting point for nearby ranking.
+- **Implemented: use the user's current location.** An explicit button requests one browser-authorised fix, then uses the same distance and trusted-availability ranking. Capture time and estimated accuracy are shown; movement is not tracked, and the user must press again after moving. Fixes older than 120 seconds or less precise than 1 km are rejected. Permission, support and timeout failures preserve the previous destination, and cancelled or superseded requests cannot replace a newer choice. Coordinates stay out of URLs, persistent storage and backend uploads; map tile requests still disclose the viewed area to the provider. See [README](README.md#current-location) for limits and recovery.
 - Filter signage by the current day and time, answering "how long can I park here right now" rather than only "this is a metered zone".
 - Use the council's historical data to show how empty a street usually is at this hour, kept clearly separate from the live reading.
 - Add a post-deploy freshness smoke check, and state it on the page when the source has been down for a sustained period.

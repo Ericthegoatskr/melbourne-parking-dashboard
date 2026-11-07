@@ -6,6 +6,8 @@ export interface Destination {
   readonly label: string;
   readonly lat: number;
   readonly lon: number;
+  /** One explicit device fix, kept in memory only; never continuous tracking. */
+  readonly deviceLocation?: { readonly accuracyMetres: number; readonly capturedAt: number };
 }
 
 export interface NearbyStreet extends StreetAvailability {

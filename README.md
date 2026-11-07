@@ -35,6 +35,7 @@ That is not a theoretical flaw. Its concrete consequence is a driver heading for
 - An expandable "what this dashboard excluded" panel showing the exclusions alongside what a naive count would have claimed.
 - Street rankings by most free bays or best odds. The odds ranking requires at least 5 reporting sensors, so a two-sensor street cannot top the list at 100%.
 - **Park near your destination:** submit an address or place name, then select a result; or choose one of eight bundled landmarks without a directory request. Search covers the City of Melbourne municipality, not all Greater Melbourne.
+- **Use my current location:** request a one-time browser location fix only after pressing the button and allowing location access. The same nearby rankings and map use that point; the captured time and estimated accuracy stay visible. Press again after moving. Address search and landmarks remain available if location access fails or is declined.
 - Choose a 250 m, 500 m or 1 km radius and rank nearby streets by **Nearest first** or **Most reported free**. Individual sensor bays are filtered before street counts are calculated; the summary cards remain city-wide. Streets with reported free bays come first, followed by occupied-only streets, then silent sensors. Distances and map pins use the nearest reporting free bay where available, otherwise the nearest reporting bay, then the nearest silent sensor.
 - Nearby results retain the 30-minute sensor trust window and all feed freshness rules: stale readings describe the past, and unavailable data produces no availability counts. **Clear destination** restores the original city-wide street search, sorting and map view.
 - A street-level map. Streets with nothing reporting are drawn hollow and grey, never coloured as though a bay were known to be free.
@@ -63,6 +64,14 @@ The API is CORS-open and needs no API key, so the browser reads the official end
 
 Destination lookup uses these two council directories only after Search is submitted. Requests time out after 10 seconds; partial results carry a retry notice, and bundled landmarks remain available if the directories fail. Address/place lookup does not change parking-feed freshness. The directories are limited reference data: their metadata reports modifications in 2021 and no update frequency, so new addresses and renamed places may be missing.
 
+## Current location
+
+Location access requires HTTPS (or a trusted local development origin), browser support and permission. The page never requests it automatically or watches movement. A denied request explains how to enable location access in browser/site settings; unsupported, unavailable and timed-out requests offer retry or destination search. **Cancel location**, editing the address, choosing a landmark or clearing the selection discards the pending result, so a late browser callback cannot replace a newer choice. Errors retain the previous selected destination.
+
+This product accepts a fix at most 120 seconds old with estimated accuracy of 1 km or better, matching the largest search radius. Older, invalid or less precise fixes require retry or an address. The captured date/time is displayed in Melbourne time; it is separate from parking-feed freshness. If uncertainty exceeds the chosen radius, the page recommends a larger radius or an exact address. Coverage still means City of Melbourne sensor bays; an empty result outside that network is not evidence that no parking exists.
+
+Coordinates are used in page memory for distance calculations, without reverse geocoding, a coordinate-bearing URL, persistent browser storage or a backend upload. The existing OpenStreetMap tile requests reveal the map area being viewed to the tile provider; this is not a promise that viewing a location is invisible to third parties.
+
 ## Run locally
 
 Requires Node.js 20, 22, or 24 and above.
@@ -89,6 +98,8 @@ For any change a user can see, also exercise a production build in a real browse
 For collection navigation, check all five same-tab links, the active Parking marker, mobile drawer focus/Escape and bottom-bar visibility, and map/footer access above the bottom bar. Navigation remains available even when parking data cannot be shown. The shared navigation component and stylesheet are mirrored in `melbourne-daily`; keep their destination order, labels and routes aligned.
 
 For destination search, submit `200 Collins Street`, explicitly select the address, then try a bundled landmark. Switch all three radii and both rankings; confirm the map's destination/radius, local street counts and unchanged city-wide cards. Clear the destination to restore the original controls. On desktop and mobile, also exercise a no-match query, directory failure/partial results, editing or selecting a landmark during a pending search, keyboard focus, stale/unavailable parking data and reduced motion. Empty nearby results mean no mapped sensor bays in that radius, not proof that no parking exists.
+
+For current location, use controlled test coordinates to cover allow, deny, unsupported/unavailable, timeout, coarse or old fixes, and a point outside the sensor network. Check that loading the page makes no location request; then verify both rankings, all radii, captured time/accuracy and map reset after success. While a request is pending, try Cancel, typing an address, choosing a landmark, clearing and leaving the page; late callbacks must not restore an abandoned location. Agent verification should use simulated coordinates rather than request the user's real position. Confirm address search and the original map still work after each failure.
 
 ## Reference data
 

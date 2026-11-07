@@ -2,6 +2,11 @@
 .destination-heading h2 { display: flex; align-items: center; gap: 9px; margin: 0; color: var(--ink); font-size: 18px; font-weight: 650; }
 .destination-heading h2 svg { flex-shrink: 0; color: var(--accent-dark); }
 .destination-heading p { margin: 6px 0 20px; color: var(--muted); font-size: 13px; }
+.destination-location { display: flex; flex-wrap: wrap; align-items: center; gap: 10px 16px; margin: 0 0 20px; }
+.destination-location > p { flex: 1 1 230px; max-width: 60ch; margin: 0; color: var(--muted); font-size: 12px; }
+.destination-locate { color: var(--accent-dark); background: var(--accent-soft); }
+.destination-locate:hover:not(:disabled) { background: var(--surface); }
+.destination-location-detail { margin: 6px 0 0; max-width: 65ch; color: var(--muted); font-size: 11px; line-height: 1.7; }
 .destination-inputs { display: grid; grid-template-columns: minmax(0, 1.4fr) minmax(0, 1fr); gap: 18px; }
 .destination-inputs label, .destination-radius { display: block; color: var(--ink-soft); font-size: 12px; font-weight: 550; }
 .destination-inputs label { margin-bottom: 7px; }
@@ -39,12 +44,15 @@ html[data-theme="navy"] .destination-finder input,
 html[data-theme="navy"] .destination-finder select { background: var(--palette-raised); border-color: var(--palette-line); }
 html[data-theme="navy"] .destination-search-button { background: var(--palette-ink); border-color: var(--palette-ink) !important; color: var(--palette-text); }
 html[data-theme="navy"] .destination-clear { border-color: var(--palette-line); }
+html[data-theme="navy"] .destination-locate { background: var(--palette-selection); border-color: var(--palette-selection-line); color: var(--palette-action); }
+html[data-theme="navy"] .destination-locate:hover:not(:disabled) { background: var(--palette-subtle); }
 html[data-theme="navy"] .destination-results button:hover,
 html[data-theme="navy"] .destination-clear:hover { background: var(--palette-selection); }
 html[data-theme="navy"] .parking-summary-scope { color: var(--palette-muted); }
 @media (max-width: 900px) { .destination-inputs { grid-template-columns: 1fr; gap: 14px; } }
 @media (max-width: 700px) {
   .destination-finder { padding: 18px; }
+  .destination-location > p { flex-basis: 100%; }
   .destination-heading h2 { font-size: 16px; align-items: flex-start; }
   .destination-finder input, .destination-finder select { font-size: 16px; }
   .destination-search-button { padding: 10px !important; }

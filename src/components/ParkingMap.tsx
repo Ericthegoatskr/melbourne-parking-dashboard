@@ -4,6 +4,7 @@ import L from 'leaflet';
 import { mayClaimCurrent } from '../lib/freshness';
 import { describeStreetSignage } from '../lib/parkingModel';
 import { formatDistance, type Destination } from '../lib/nearbyParking';
+import { formatMelbourneDateTime } from '../lib/format';
 import type { FeedState, StreetAvailability } from '../lib/types';
 import 'leaflet/dist/leaflet.css';
 import './ParkingMap.css';
@@ -108,6 +109,8 @@ export function ParkingMap({ streets, state, selected, onSelect, destination = n
   const destinationLabel = destination?.label;
   const destinationLat = destination?.lat;
   const destinationLon = destination?.lon;
+  const locationAccuracy = destination?.deviceLocation?.accuracyMetres;
+  const locationCapturedAt = destination?.deviceLocation?.capturedAt;
 
   // Reframe only when the chosen destination or search radius changes. Fresh
   // sensor readings must not pull the map away from where someone is looking.
@@ -133,7 +136,7 @@ export function ParkingMap({ streets, state, selected, onSelect, destination = n
       interactive: false,
     }).addTo(layer);
     destinationCircleRef.current = circle;
-    const label = `Destination: ${destinationLabel ?? 'Selected place'}`;
+    const label = locationCapturedAt === undefined ? `Destination: ${destinationLabel ?? 'Selected place'}` : 'Your location (one-time fix)';
     const marker = L.marker(point, {
       icon: L.divIcon({
         className: 'parking-destination-marker',
@@ -150,9 +153,11 @@ export function ParkingMap({ streets, state, selected, onSelect, destination = n
     }).addTo(layer);
     marker.getElement()?.setAttribute('aria-label', label);
     marker.bindTooltip(escapeHtml(label), { direction: 'top', className: 'parking-destination-tooltip' });
-    marker.bindPopup(`<strong>${escapeHtml(label)}</strong><br/><span>${formatDistance(radiusMetres)} search radius · straight-line distance</span>`);
+    marker.bindPopup(`<strong>${escapeHtml(label)}</strong><br/><span>${formatDistance(radiusMetres)} search radius · straight-line distance</span>`
+      + (locationAccuracy !== undefined && locationCapturedAt !== undefined
+        ? `<br/><span>Accuracy about ${formatDistance(locationAccuracy)} · captured ${escapeHtml(formatMelbourneDateTime(new Date(locationCapturedAt)))} Melbourne time. Update your location after moving.</span>` : ''));
     map.fitBounds(circle.getBounds(), { padding: [24, 24], maxZoom: 16, animate: !prefersReducedMotion() });
-  }, [destinationId, destinationLabel, destinationLat, destinationLon, radiusMetres]);
+  }, [destinationId, destinationLabel, destinationLat, destinationLon, radiusMetres, locationAccuracy, locationCapturedAt]);
 
   useEffect(() => {
     const layer = layerRef.current;
@@ -253,7 +258,7 @@ export function ParkingMap({ streets, state, selected, onSelect, destination = n
           <li><i className="map-key-some" aria-hidden />12–&lt;30% free</li>
           <li><i className="map-key-few" aria-hidden />&lt;12% free</li>
           <li><i className="map-key-silent" aria-hidden />No signal</li>
-          {destination && <li><i className="map-key-destination" aria-hidden />Destination</li>}
+          {destination && <li><i className="map-key-destination" aria-hidden />{destination.deviceLocation ? 'Your location' : 'Destination'}</li>}
         </ul>
         <small>{destination
           ? `Only bays inside the dashed search radius are counted${mayClaimCurrent(state) ? '' : ', using the last reading'}. Each street circle marks its nearest reporting free bay, or its nearest reporting bay if none is free. Silent streets use their nearest sensor. Distances are straight line, not walking routes.`
