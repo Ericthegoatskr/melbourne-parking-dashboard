@@ -23,7 +23,8 @@
   --palette-selection-line: #d9a79c;
   --palette-icon: #e7dfd2;
 }
-html[data-page="parking"] {
+html[data-page="parking"],
+html[data-page="home"] [data-entry="parking"] {
   --palette-canvas: #2c241b;
   --palette-panel: #3a3024;
   --palette-hover: #493c2b;
@@ -46,7 +47,8 @@ html[data-page="parking"] {
   --palette-selection-line: #cba86c;
   --palette-icon: #e8d8bd;
 }
-html[data-page="weather"] {
+html[data-page="weather"],
+html[data-page="home"] [data-entry="weather"] {
   --palette-canvas: #210c22;
   --palette-panel: #35122e;
   --palette-hover: #501c40;
@@ -69,7 +71,8 @@ html[data-page="weather"] {
   --palette-selection-line: #c28a80;
   --palette-icon: #f3deda;
 }
-html[data-page="air"] {
+html[data-page="air"],
+html[data-page="home"] [data-entry="air"] {
   --palette-canvas: #102e29;
   --palette-panel: #193f37;
   --palette-hover: #244e42;
@@ -92,7 +95,8 @@ html[data-page="air"] {
   --palette-selection-line: #89b89a;
   --palette-icon: #dce8d7;
 }
-html[data-page="transport"] {
+html[data-page="transport"],
+html[data-page="home"] [data-entry="transport"] {
   --palette-canvas: #252342;
   --palette-panel: #343052;
   --palette-hover: #454064;
