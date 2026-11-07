@@ -42,6 +42,7 @@ That is not a theoretical flaw. Its concrete consequence is a driver heading for
 - Finite card entrance and value-change animations, with motion disabled when the system requests reduced motion.
 - Responsive from desktop down to 375px, with a mobile navigation drawer and no horizontal overflow.
 - The same five-destination navigation as the other dashboards: Home, Parking, Weather & UV, Air quality and Transport. Desktop uses the sidebar; mobile has a bottom bar with safe-area spacing. The current dashboard is highlighted, while local map/street/source links remain under “On this page”.
+- The map code, bundled Leaflet styles and tiles load near the map instead of delaying the initial parking summary. Map links, street selection and a manual load button also activate it; a failed download leaves the street data available with a retry action. Mobile controls have 44px touch targets and the street list lets scrolling continue into the page.
 
 ## Data sources
 

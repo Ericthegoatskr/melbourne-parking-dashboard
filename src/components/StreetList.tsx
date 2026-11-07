@@ -1,3 +1,4 @@
+import { memo } from 'react';
 import { MapPin, Search, SignalZero } from 'lucide-react';
 import { formatCount, formatPercent } from '../lib/format';
 import { describeStreetSignage } from '../lib/parkingModel';
@@ -23,7 +24,7 @@ const SORTS: { value: StreetSort; label: string }[] = [
   { value: 'name', label: 'A–Z' },
 ];
 
-export function StreetList({ streets, state, sort, onSortChange, query, onQueryChange, selected, onSelect }: Props) {
+export const StreetList = memo(function StreetList({ streets, state, sort, onSortChange, query, onQueryChange, selected, onSelect }: Props) {
   const current = mayClaimCurrent(state);
 
   return (
@@ -78,7 +79,7 @@ export function StreetList({ streets, state, sort, onSortChange, query, onQueryC
       )}
     </section>
   );
-}
+});
 
 function StreetRow({ street, current, selected, onSelect }: {
   street: StreetAvailability;
@@ -127,7 +128,7 @@ function VacancyBar({ rate }: { rate: number | null }) {
   const colour = rate >= 0.3 ? 'high' : rate >= 0.12 ? 'medium' : 'low';
   return (
     <div className={`street-vacancy-bar street-vacancy-bar--${colour}`} aria-hidden>
-      <div style={{ height: `${Math.max(rate * 100, 4)}%` }} />
+      <div style={{ transform: `scaleY(${Math.max(rate, 0.04)})` }} />
     </div>
   );
 }

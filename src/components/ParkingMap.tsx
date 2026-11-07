@@ -4,6 +4,7 @@ import L from 'leaflet';
 import { mayClaimCurrent } from '../lib/freshness';
 import { describeStreetSignage } from '../lib/parkingModel';
 import type { FeedState, StreetAvailability } from '../lib/types';
+import 'leaflet/dist/leaflet.css';
 import './ParkingMap.css';
 
 const MELBOURNE_CBD: L.LatLngTuple = [-37.8136, 144.9631];
@@ -28,14 +29,14 @@ function prefersReducedMotion(): boolean {
     && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 }
 
-interface Props {
+export interface ParkingMapProps {
   streets: readonly StreetAvailability[];
   state: FeedState;
   selected: string | null;
   onSelect: (street: string | null) => void;
 }
 
-export function ParkingMap({ streets, state, selected, onSelect }: Props) {
+export function ParkingMap({ streets, state, selected, onSelect }: ParkingMapProps) {
   const containerRef = useRef<HTMLDivElement>(null);
   const mapRef = useRef<L.Map | null>(null);
   const layerRef = useRef<L.LayerGroup | null>(null);

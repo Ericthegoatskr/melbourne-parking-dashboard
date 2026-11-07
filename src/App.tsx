@@ -3,7 +3,7 @@ import { ArrowUpRight, CircleParking, Database, LayoutGrid, ListFilter, Map, Men
 import { FreshnessBanner, FreshnessLegend } from './components/FreshnessBanner';
 import { SummaryCards } from './components/SummaryCards';
 import { StreetList } from './components/StreetList';
-import { ParkingMap } from './components/ParkingMap';
+import { DeferredParkingMap } from './components/DeferredParkingMap';
 import { DataQualityPanel } from './components/DataQualityPanel';
 import { Footer } from './components/Footer';
 import CollectionNav from './components/CollectionNav';
@@ -270,7 +270,7 @@ export default function App() {
                     />
                   </div>
                   <div className="map-column" id="parking-map">
-                    <ParkingMap
+                    <DeferredParkingMap
                       streets={visibleStreets}
                       state={state}
                       selected={selected}

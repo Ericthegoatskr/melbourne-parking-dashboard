@@ -60,27 +60,31 @@
   font-family: var(--font-ui);
   color: var(--ink);
 }
+.parking-map-placeholder { display: grid; place-items: center; padding: 24px; background: #f5f2f8; text-align: center; color: var(--muted); }
+.parking-map-placeholder p { max-width: 280px; font-size: 13px; line-height: 1.8; }
 
 /* Only the base tiles are muted. Vacancy markers retain their semantic colours. */
 .parking-map-canvas .basemap-tiles { filter: saturate(.15) contrast(.93) brightness(1.035); }
-.parking-map-canvas .leaflet-popup-content-wrapper,
-.parking-map-canvas .leaflet-popup-tip { background: #fff; color: var(--ink); }
-.parking-map-canvas .leaflet-popup-content-wrapper {
+/* The vendor stylesheet arrives with the deferred map. Keep overrides more
+   specific than Leaflet's .leaflet-touch and .leaflet-container rules. */
+.parking-map-canvas.leaflet-container .leaflet-popup-content-wrapper,
+.parking-map-canvas.leaflet-container .leaflet-popup-tip { background: #fff; color: var(--ink); }
+.parking-map-canvas.leaflet-container .leaflet-popup-content-wrapper {
   border-radius: 14px;
   box-shadow: 0 7px 25px #34254124;
   border: 1px solid var(--border);
 }
-.parking-map-canvas .leaflet-popup-content { font-size: 12px; line-height: 1.75; margin: 15px 20px; }
-.parking-map-canvas .leaflet-popup-content strong { font-weight: 650; color: var(--ink); }
-.parking-map-canvas .leaflet-popup-content span { color: var(--ink-soft); }
-.parking-map-canvas a.leaflet-popup-close-button { color: var(--muted); top: 4px; right: 4px; }
-.parking-map-canvas .leaflet-control-zoom {
+.parking-map-canvas.leaflet-container .leaflet-popup-content { font-size: 12px; line-height: 1.75; margin: 15px 20px; }
+.parking-map-canvas.leaflet-container .leaflet-popup-content strong { font-weight: 650; color: var(--ink); }
+.parking-map-canvas.leaflet-container .leaflet-popup-content span { color: var(--ink-soft); }
+.parking-map-canvas.leaflet-container a.leaflet-popup-close-button { color: var(--muted); top: 4px; right: 4px; }
+.parking-map-canvas.leaflet-container .leaflet-control-zoom {
   overflow: hidden;
   border: 1px solid #ddd7e6;
   border-radius: 10px;
   box-shadow: 0 3px 12px #34254116;
 }
-.parking-map-canvas .leaflet-bar a {
+.parking-map-canvas.leaflet-container .leaflet-bar a {
   background: #fff;
   color: var(--ink-soft);
   border-bottom-color: var(--border);
@@ -88,11 +92,11 @@
   height: 34px;
   line-height: 34px;
 }
-.parking-map-canvas .leaflet-bar a:hover { background: var(--accent-soft); color: var(--accent-dark); }
-.parking-map-canvas .leaflet-bar a.leaflet-disabled { background: #f7f6fa; color: #aaa2b3; }
-.parking-map-canvas .leaflet-control-attribution { background: #fffffff0; color: var(--ink-soft); font-size: 10px; }
-.parking-map-canvas .leaflet-control-attribution a { color: #66477e; }
-.parking-map-canvas .leaflet-interactive:focus-visible { outline: none; stroke-width: 4px; stroke: var(--ink); }
+.parking-map-canvas.leaflet-container .leaflet-bar a:hover { background: var(--accent-soft); color: var(--accent-dark); }
+.parking-map-canvas.leaflet-container .leaflet-bar a.leaflet-disabled { background: #f7f6fa; color: #aaa2b3; }
+.parking-map-canvas.leaflet-container .leaflet-control-attribution { background: #fffffff0; color: var(--ink-soft); font-size: 10px; }
+.parking-map-canvas.leaflet-container .leaflet-control-attribution a { color: #66477e; }
+.parking-map-canvas.leaflet-container .leaflet-interactive:focus-visible { outline: none; stroke-width: 4px; stroke: var(--ink); }
 
 .parking-map-key { padding: 16px 22px 19px; background: #fff; }
 .parking-map-key > p { margin: 0 0 9px; color: var(--ink-soft); font-size: 11px; font-weight: 550; }
@@ -109,18 +113,19 @@
   .parking-map-canvas { height: 430px; }
 }
 @media (max-width: 600px) {
-  .parking-map-heading { padding: 18px 16px 15px; gap: 10px; }
+  .parking-map-heading { padding: 18px 16px 15px; gap: 10px; flex-wrap: wrap; }
   .parking-map-heading h2 { font-size: 15px; gap: 7px; }
   .parking-map-heading p { font-size: 10px; }
-  .parking-map-reset { padding: 7px 8px; font-size: 10px; gap: 5px; }
+  .parking-map-reset { min-height: 44px; padding: 8px 10px; font-size: 11px; gap: 5px; }
   .parking-map-reset svg { width: 13px; }
   .parking-map-canvas { height: 380px; }
   .parking-map-key { padding: 15px 16px 17px; }
   .parking-map-key ul { gap: 8px 12px; }
-  .parking-map-canvas .leaflet-control-attribution { font-size: 9px; }
+  .parking-map-canvas.leaflet-container .leaflet-control-attribution { font-size: 9px; }
+  .parking-map-canvas.leaflet-container .leaflet-bar a { width: 44px; height: 44px; line-height: 44px; }
 }
 @media (prefers-reduced-motion: reduce) {
   .parking-map-reset,
-  .parking-map-canvas .leaflet-zoom-animated,
+  .parking-map-canvas.leaflet-container .leaflet-zoom-animated,
   .parking-map-canvas.leaflet-fade-anim .leaflet-popup { transition: none !important; }
 }
