@@ -40,6 +40,7 @@ City of Melbourne 是 source of truth，而且已經把感測器資料完整開�
 - 與 [Melbourne Daily](https://ericthegoatskr.github.io/melbourne-daily/) 共用視覺風格及設計變數：淡薰衣草色背景、白色卡片與橘色重點色。
 - 卡片進場與數值變更採用播放後即停止的動畫；系統開啟「減少動態效果」時停用動畫。
 - Desktop 到 375px mobile responsive，手機提供抽屜式導覽；無水平溢出。
+- 與其他看板統一五個入口：首頁、停車、天氣／UV、空品、交通。桌機使用側欄，手機使用保留安全邊界的底部導覽；目前看板會標示選取狀態，地圖、街道與資料來源的頁內連結則保留在「On this page」。
 
 ## Data Sources
 
@@ -75,6 +76,8 @@ npm run verify
 **用這個指令，不要各自用 `npx` 跑底層工具。** 本機用 `npx tsc -b`、CI 用 `npm run typecheck` 的分岔，正是讓一個壞掉的 script 通過本機檢查卻在 CI 失敗的原因。
 
 會影響使用者看到的變更，還必須從 production build 實際檢查 desktop / 375px mobile、四種資料狀態、互動、overflow 與 browser console。**build success 本身不是完整驗收。**
+
+系列導覽需檢查五個入口皆在同一分頁開啟、停車頁的選取標示、手機抽屜的焦點／Escape 與底部導覽顯示，以及地圖和頁尾不被底部導覽遮住。停車資料無法顯示時，導覽仍須可用。共用導覽元件與樣式在 `melbourne-daily` 中有對應副本；入口順序、名稱與路徑需保持一致。
 
 ## Reference data
 

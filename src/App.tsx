@@ -6,6 +6,7 @@ import { StreetList } from './components/StreetList';
 import { ParkingMap } from './components/ParkingMap';
 import { DataQualityPanel } from './components/DataQualityPanel';
 import { Footer } from './components/Footer';
+import CollectionNav from './components/CollectionNav';
 import {
   LoadingScreen,
   RefreshWarning,
@@ -172,6 +173,7 @@ export default function App() {
       {menuOpen && <div className="parking-backdrop" aria-hidden="true" onClick={closeMenu} />}
       <aside
         ref={sidebar}
+        id="main-navigation"
         className={`parking-sidebar ${menuOpen ? 'is-open' : ''}`}
         aria-label="Main navigation"
         role={menuOpen ? 'dialog' : undefined}
@@ -182,8 +184,9 @@ export default function App() {
           <span className="brand-mark">m<span>.</span></span>
           <span>melbourne<span>parking<span className="brand-period">.</span></span></span>
         </a>
-        <span className="sidebar-label">A LITTLE LESS CIRCLING.</span>
-        <nav className="parking-nav">
+        <CollectionNav current="parking" placement="sidebar" onNavigate={closeMenu} />
+        <span className="sidebar-label">ON THIS PAGE</span>
+        <nav className="parking-nav page-section-nav" aria-label="On this page">
           {navigation.filter(({ id }) => canExplore || id === 'overview' || id === 'sources').map(({ id, label, Icon }) => (
             <a key={id} href={`#${id}`} className={active === id ? 'active' : ''}
               aria-current={active === id ? 'location' : undefined} onClick={() => navigate(id)}>
@@ -192,14 +195,7 @@ export default function App() {
             </a>
           ))}
         </nav>
-        <div className="sidebar-note">
-          <CircleParking size={25} aria-hidden="true" />
-          <strong>Your next stop, sorted.</strong>
-          <p>Explore the streets.<br />Check the signs.</p>
-          <span>CITY OF MELBOURNE</span>
-        </div>
         <div className="sidebar-bottom">
-          <a href={DAILY_URL}><LayoutGrid size={17} aria-hidden="true" />Melbourne Daily<ArrowUpRight size={14} aria-hidden="true" /></a>
           <a href="https://github.com/Ericthegoatskr/melbourne-parking-dashboard" target="_blank" rel="noopener noreferrer">View on GitHub<ArrowUpRight size={14} aria-hidden="true" /><span className="sr-only"> (opens in a new tab)</span></a>
           <span>THE MELBOURNE COLLECTION</span>
         </div>
@@ -208,7 +204,7 @@ export default function App() {
       <div className="parking-main-shell">
       <header className="parking-topbar">
         <div className="topbar-start">
-          <button ref={menuButton} className="menu-button" aria-label={menuOpen ? 'Close menu' : 'Open menu'} aria-expanded={menuOpen} onClick={() => setMenuOpen(!menuOpen)}>
+          <button ref={menuButton} className="menu-button" aria-label={menuOpen ? 'Close menu' : 'Open menu'} aria-expanded={menuOpen} aria-controls="main-navigation" onClick={() => setMenuOpen(!menuOpen)}>
             {menuOpen ? <X size={21} /> : <Menu size={21} />}
           </button>
           <span className="parking-breadcrumb">Your city, at a glance<span>/</span><strong>Parking explorer</strong></span>
@@ -298,6 +294,7 @@ export default function App() {
         <div id="sources"><Footer /></div>
       </main>
       </div>
+      <CollectionNav current="parking" placement="mobile" hidden={menuOpen} />
     </div>
   );
 }

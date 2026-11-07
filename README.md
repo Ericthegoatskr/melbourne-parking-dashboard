@@ -41,6 +41,7 @@ That is not a theoretical flaw. Its concrete consequence is a driver heading for
 - A shared visual style with [Melbourne Daily](https://ericthegoatskr.github.io/melbourne-daily/): a soft lavender canvas, white cards and orange accents, with matching design tokens.
 - Finite card entrance and value-change animations, with motion disabled when the system requests reduced motion.
 - Responsive from desktop down to 375px, with a mobile navigation drawer and no horizontal overflow.
+- The same five-destination navigation as the other dashboards: Home, Parking, Weather & UV, Air quality and Transport. Desktop uses the sidebar; mobile has a bottom bar with safe-area spacing. The current dashboard is highlighted, while local map/street/source links remain under “On this page”.
 
 ## Data sources
 
@@ -76,6 +77,8 @@ This runs the same four steps as CI, in the same order: `lint` → `typecheck` �
 **Use this command rather than invoking the underlying tools with `npx`.** Checking locally with `npx tsc -b` while CI ran `npm run typecheck` is exactly how a broken script passed local checks and then failed CI.
 
 For any change a user can see, also exercise a production build in a real browser: desktop and 375px mobile, all four data states, interaction, overflow, and the browser console. **A successful build is not acceptance.**
+
+For collection navigation, check all five same-tab links, the active Parking marker, mobile drawer focus/Escape and bottom-bar visibility, and map/footer access above the bottom bar. Navigation remains available even when parking data cannot be shown. The shared navigation component and stylesheet are mirrored in `melbourne-daily`; keep their destination order, labels and routes aligned.
 
 ## Reference data
 
