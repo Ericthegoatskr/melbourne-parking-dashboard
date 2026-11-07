@@ -38,7 +38,9 @@ That is not a theoretical flaw. Its concrete consequence is a driver heading for
 - Signage restrictions named only where a street's zones agree; otherwise the actual mix is listed and the reader is sent to the sign.
 - An older snapshot may never overwrite a newer one. A failed fetch keeps the last valid reading and ages it honestly.
 - An open tab ages itself, without depending on a network refresh or an unthrottled timer.
-- Responsive from desktop down to 375px, with no horizontal overflow.
+- A shared visual style with [Melbourne Daily](https://ericthegoatskr.github.io/melbourne-daily/): a soft lavender canvas, white cards and orange accents, with matching design tokens.
+- Finite card entrance and value-change animations, with motion disabled when the system requests reduced motion.
+- Responsive from desktop down to 375px, with a mobile navigation drawer and no horizontal overflow.
 
 ## Data sources
 
@@ -93,6 +95,9 @@ If street names fail to load the dashboard still works: every bay falls into the
 melbourne-parking-dashboard/
 ├── src/
 │   ├── App.tsx
+│   ├── styles.css              # responsive series layout and shared motion rules
+│   ├── styles/
+│   │   └── tokens.css          # Melbourne Daily colour, typography and motion tokens
 │   ├── lib/
 │   │   ├── config.ts            # every threshold, each traceable to a measurement
 │   │   ├── odsClient.ts         # fetching and fail-closed validation
@@ -123,7 +128,7 @@ This dashboard needs no scheduled ingestion. The browser reads the official feed
 
 ## Basemap dependency
 
-The basemap uses OpenStreetMap's own tiles, darkened in the browser with a CSS filter to near-greyscale so that colour belongs only to the data.
+The basemap uses OpenStreetMap's own tiles, softly desaturated with a CSS filter while keeping a light background. Street availability markers remain easy to distinguish against the map and match the legend.
 
 The CARTO dark basemap used previously now answers **HTTP 200 with an "API KEY REQUIRED" watermark tile** — a valid response carrying invalid content, which is a neat miniature of the reason this dashboard exists.
 

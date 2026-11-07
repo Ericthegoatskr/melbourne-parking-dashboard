@@ -1,28 +1,29 @@
 import { ExternalLink } from 'lucide-react';
 import { ATTRIBUTION, DATASET_PAGE, SENSOR_TRUST_WINDOW_MINUTES } from '../lib/config';
+import './panels.css';
 
 export function Footer() {
   return (
-    <footer className="mt-2 space-y-4 border-t border-white/10 pt-6 text-sm text-slate-400">
+    <footer className="parking-footer">
       <div>
-        <h2 className="text-xs font-semibold uppercase tracking-wide text-slate-300">
+        <h2 className="parking-footer-heading">
           Source and licence
         </h2>
-        <p className="mt-1.5">
+        <p className="parking-footer-copy">
           Bay status from the{' '}
           <a
-            className="text-cyan-300 underline-offset-2 hover:underline"
+            className="parking-footer-link"
             href={DATASET_PAGE}
             target="_blank"
             rel="noreferrer"
           >
             On-street Parking Bay Sensors
-            <ExternalLink className="ml-0.5 inline h-3 w-3" aria-hidden />
+            <ExternalLink className="parking-footer-external" aria-hidden />
           </a>{' '}
           dataset. Street names and signage from the council&rsquo;s parking zone and sign plate
           datasets. Published by {ATTRIBUTION.publisher} on the{' '}
           <a
-            className="text-cyan-300 underline-offset-2 hover:underline"
+            className="parking-footer-link"
             href={ATTRIBUTION.portal}
             target="_blank"
             rel="noreferrer"
@@ -31,7 +32,7 @@ export function Footer() {
           </a>{' '}
           under{' '}
           <a
-            className="text-cyan-300 underline-offset-2 hover:underline"
+            className="parking-footer-link"
             href={ATTRIBUTION.licenceUrl}
             target="_blank"
             rel="noreferrer"
@@ -43,10 +44,10 @@ export function Footer() {
       </div>
 
       <div>
-        <h2 className="text-xs font-semibold uppercase tracking-wide text-slate-300">
+        <h2 className="parking-footer-heading">
           What this is not
         </h2>
-        <ul className="mt-1.5 list-disc space-y-1 pl-5">
+        <ul className="parking-footer-limitations">
           <li>
             Not a City of Melbourne service, and not endorsed by the council. It is an
             independent reading of their published data.
@@ -66,7 +67,7 @@ export function Footer() {
         </ul>
       </div>
 
-      <p className="text-xs text-slate-500">
+      <p className="parking-footer-note">
         Bays are counted only when their sensor reported within{' '}
         {SENSOR_TRUST_WINDOW_MINUTES} minutes of the feed&rsquo;s newest reading. Freshness is
         derived from the council&rsquo;s timestamps in Australia/Melbourne time.

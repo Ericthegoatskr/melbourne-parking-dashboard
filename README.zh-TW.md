@@ -37,7 +37,9 @@ City of Melbourne 是 source of truth，而且已經把感測器資料完整開�
 - 標誌牌限制只在整條街無歧義時具名，否則列出實際存在的種類並導向現場標誌。
 - 較舊的快照不得覆寫較新的；抓取失敗保留上一份有效讀數並照實老化。
 - 開著的分頁自行老化，不依賴網路刷新或未被節流的計時器。
-- Desktop 到 375px mobile responsive；無水平溢出。
+- 與 [Melbourne Daily](https://ericthegoatskr.github.io/melbourne-daily/) 共用視覺風格及設計變數：淡薰衣草色背景、白色卡片與橘色重點色。
+- 卡片進場與數值變更採用播放後即停止的動畫；系統開啟「減少動態效果」時停用動畫。
+- Desktop 到 375px mobile responsive，手機提供抽屜式導覽；無水平溢出。
 
 ## Data Sources
 
@@ -92,6 +94,9 @@ npm run build:crosswalk
 melbourne-parking-dashboard/
 ├── src/
 │   ├── App.tsx
+│   ├── styles.css              # 系列共用的響應式版面與動畫規則
+│   ├── styles/
+│   │   └── tokens.css          # Melbourne Daily 色彩、字體與動畫設計變數
 │   ├── lib/
 │   │   ├── config.ts            # 所有門檻，皆有實測根據
 │   │   ├── odsClient.ts         # 抓取與 fail-closed 驗證
@@ -122,7 +127,7 @@ melbourne-parking-dashboard/
 
 ## Basemap dependency
 
-地圖底圖使用 OpenStreetMap 官方圖磚，以 CSS 濾鏡在瀏覽器端調成深色近灰階，讓顏色只屬於資料。
+地圖底圖使用 OpenStreetMap 官方圖磚，以 CSS 濾鏡稍微降低飽和度並維持淺色背景，讓街道空位標記清楚可辨，且與圖例一致。
 
 原本使用的 CARTO 深色底圖現在會回傳 **HTTP 200 但內容是「API KEY REQUIRED」浮水印圖磚**——一個有效的回應載著無效的內容，正好是本看板存在理由的縮影。
 

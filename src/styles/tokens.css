@@ -1,0 +1,26 @@
+/* Shared visual language for the Melbourne dashboard collection. */
+:root {
+  --font-ui: "DM Sans", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  --ink: #292733;
+  --ink-soft: #504b5c;
+  --muted: #716c7a;
+  --accent: #ed7043;
+  --accent-dark: #ac3e1a;
+  --accent-soft: #fff0e8;
+  --lavender: #eee8fb;
+  --lavender-ink: #65518d;
+  --mint: #e4f2e8;
+  --mint-ink: #38634a;
+  --peach: #fcebdd;
+  --surface: #ffffff;
+  --canvas: #f7f6fa;
+  --border: #e9e6ee;
+  --radius: 22px;
+  --radius-small: 12px;
+  --shadow-card: 0 4px 24px #33244c05, 0 1px 3px #33244c03;
+  --shadow-hover: 0 12px 30px #33244c0c, 0 2px 5px #33244c03;
+  --ease-out: cubic-bezier(0.22, 1, 0.36, 1);
+  --duration-fast: 180ms;
+  --duration-reveal: 620ms;
+  --green: var(--mint-ink);
+}

@@ -1,0 +1,173 @@
+/* Parking data panels share the Melbourne Daily palette and motion language. */
+.parking-summary-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 16px; }
+.parking-summary-tile.card { min-width: 0; position: relative; padding: 22px 24px; border-color: #ffffffb3; overflow: hidden; animation: parking-panel-arrive 620ms var(--ease-out) backwards; transition: transform 200ms var(--ease-out), box-shadow 200ms; }
+.parking-summary-tile--free.card { background: linear-gradient(125deg, #dff0e6, #f1f8ee); }
+.parking-summary-tile--occupied.card { background: linear-gradient(125deg, #eee6fb, #f7f1ff); animation-delay: 70ms; }
+.parking-summary-tile--coverage.card { background: linear-gradient(125deg, #fcebdc, #fff5eb); animation-delay: 140ms; }
+.parking-summary-tile:hover { transform: translateY(-2px); box-shadow: var(--shadow-hover); }
+.parking-summary-label { display: flex; align-items: center; gap: 11px; color: var(--ink-soft); font-size: 13px; font-weight: 550; }
+.parking-summary-icon { width: 37px; height: 37px; flex: 0 0 37px; display: grid; place-items: center; background: #ffffffb8; border-radius: 12px; color: var(--mint-ink); }
+.parking-summary-tile--occupied .parking-summary-icon { color: var(--lavender-ink); }
+.parking-summary-tile--coverage .parking-summary-icon { color: var(--accent-dark); }
+.parking-summary-value { margin: 15px 0 9px; color: var(--ink); font-size: clamp(38px, 3.7vw, 50px); line-height: 1.08; letter-spacing: -1.8px; font-weight: 600; }
+.parking-summary-detail { font-size: 12px; color: var(--ink-soft); line-height: 1.75; margin: 0; }
+.parking-summary-warning { margin: 9px 0 0; color: #8d4c21; font-size: 11px; font-weight: 550; }
+.parking-summary--historical .parking-summary-tile--free.card { background: linear-gradient(125deg, #fff0dc, #fff8ef); }
+.parking-value-change { display: inline-block; animation: parking-value-enter 320ms var(--ease-out); }
+
+.freshness-banner.card { display: flex; align-items: center; justify-content: space-between; gap: 18px; padding: 17px 20px; border-radius: 15px; box-shadow: none; }
+.freshness-main { display: flex; align-items: flex-start; gap: 12px; min-width: 0; }
+.freshness-content { min-width: 0; }
+.freshness-icon { display: grid; place-items: center; flex: 0 0 32px; width: 32px; height: 32px; background: #fff9; border-radius: 10px; }
+.freshness-banner--live.card { background: #f1f8f3; border-color: #dcebdc; color: #38634a; }
+.freshness-banner--delayed.card { background: #fff7e7; border-color: #eadcbc; color: #8a611d; }
+.freshness-banner--stale.card { background: #fff0e5; border-color: #f0d6c2; color: #9c4d20; }
+.freshness-banner--unavailable.card { background: #fff0f0; border-color: #eed0d4; color: #963f4d; }
+.freshness-status-line { display: flex; align-items: center; flex-wrap: wrap; gap: 7px 11px; }
+.freshness-status.chip { padding: 3px 9px; font-size: 11px; font-weight: 650; color: inherit; background: #ffffffba; border: 1px solid currentColor; border-color: color-mix(in srgb, currentColor 20%, transparent); }
+.freshness-time { color: var(--ink-soft); font-size: 11px; line-height: 1.7; }
+.freshness-copy { margin: 6px 0 0; color: var(--ink-soft); font-size: 12px; line-height: 1.7; }
+.freshness-action { flex-shrink: 0; display: inline-flex; align-items: center; justify-content: center; gap: 7px; min-height: 40px; border: 1px solid #dcd8e2; background: #fff; border-radius: 10px; padding: 9px 13px; color: var(--ink); font-size: 12px; font-weight: 550; transition: background 180ms, box-shadow 180ms, transform 180ms; }
+.freshness-action:hover:not(:disabled) { background: #fff9f5; border-color: #e7bca6; box-shadow: 0 3px 10px #ae51200a; transform: translateY(-1px); }
+.freshness-action:disabled { opacity: .6; cursor: wait; }
+.freshness-legend { color: var(--muted); font-size: 11px; line-height: 1.9; margin: 18px 3px 0; }
+.freshness-legend strong { color: var(--ink-soft); font-weight: 550; }
+
+.street-panel.card { padding: 22px 20px 12px; min-width: 0; }
+.street-panel-heading { display: flex; align-items: flex-start; gap: 10px; margin-bottom: 19px; }
+.street-panel-icon { display: grid; place-items: center; flex: 0 0 35px; width: 35px; height: 35px; border-radius: 11px; color: var(--accent-dark); background: var(--accent-soft); }
+.street-panel-heading h2 { color: var(--ink); font-size: 16px; line-height: 1.4; font-weight: 650; letter-spacing: -.25px; margin: 0; }
+.street-panel-heading p { color: var(--muted); font-size: 11px; margin: 5px 0 0; }
+.street-controls { display: flex; flex-direction: column; align-items: stretch; gap: 10px; }
+.street-search { position: relative; min-width: 0; }
+.street-search > svg { position: absolute; left: 12px; top: 50%; transform: translateY(-50%); color: #928797; pointer-events: none; }
+.street-search input { display: block; width: 100%; min-width: 0; border: 1px solid var(--border); border-radius: 11px; background: #fbfafc; color: var(--ink); padding: 11px 12px 11px 38px; font: inherit; font-size: 12px; min-height: 42px; transition: border-color 180ms, box-shadow 180ms; }
+.street-search input::placeholder { color: var(--muted); }
+.street-search input:focus { border-color: #d2987b; box-shadow: 0 0 0 3px #ed70430d; }
+.street-sorts { display: flex; gap: 3px; padding: 4px; border: 1px solid #e8e2ef; border-radius: 10px; background: #f2eff6; }
+.street-sorts button { flex: 1; min-width: 0; border: 0; border-radius: 7px; background: transparent; padding: 7px 9px; min-height: 33px; font-size: 11px; font-weight: 550; color: var(--muted); white-space: nowrap; transition: background 180ms, color 180ms, box-shadow 180ms; }
+.street-sorts button[aria-pressed='true'] { color: var(--ink); background: #fff; box-shadow: 0 1px 4px #30244512; }
+.street-sorts button:hover { color: var(--accent-dark); }
+.street-ranking-note { margin: 12px 0 0; padding: 11px 12px; border-radius: 9px; background: #faf6ef; color: #7d6242; font-size: 11px; line-height: 1.75; }
+.street-list { margin: 14px 0 0; padding: 0 3px 0 0; list-style: none; max-height: 524px; min-width: 0; overflow-y: auto; overscroll-behavior-y: contain; scrollbar-width: thin; scrollbar-color: #d8d0e1 transparent; }
+.street-list > li { min-width: 0; border-bottom: 1px solid #eeeaf2; }
+.street-list > li:last-child { border-bottom: 0; }
+.street-row { display: flex; align-items: center; gap: 12px; width: 100%; min-width: 0; text-align: left; padding: 14px 11px; border: 1px solid transparent; border-radius: 11px; background: transparent; color: var(--ink); transition: background 180ms, border-color 180ms; }
+.street-row:hover { background: #faf7fc; }
+.street-row--selected, .street-row--selected:hover { background: #fff2e9; border-color: #f0cfbd; }
+.street-row-copy { flex: 1; min-width: 0; }
+.street-row-title { display: flex; flex-wrap: wrap; align-items: center; gap: 5px 8px; }
+.street-row-title > span:first-child { font-size: 13px; font-weight: 550; color: var(--ink); overflow-wrap: anywhere; }
+.street-no-signal.chip { color: #746c7e; background: #f0ecf3; font-size: 9px; padding: 3px 6px; gap: 3px; }
+.street-row-detail { color: var(--muted); font-size: 10px; line-height: 1.75; margin: 5px 0 0; overflow-wrap: anywhere; }
+.street-row-figures { flex-shrink: 0; text-align: right; min-width: 32px; }
+.street-free-count { color: var(--ink); font-size: 25px; font-weight: 600; letter-spacing: -.8px; line-height: 1.1; margin: 0; }
+.street-free-rate { color: var(--muted); font-size: 10px; margin: 5px 0 0; }
+.street-row-figures--historical .street-free-count, .street-row--silent .street-free-count { color: #8b8093; }
+.street-vacancy-bar { flex: 0 0 5px; height: 38px; width: 5px; display: flex; flex-direction: column; justify-content: flex-end; border-radius: 4px; background: #f0ebf4; overflow: hidden; }
+.street-vacancy-bar > div { width: 100%; border-radius: 4px; transition: height 500ms var(--ease-out); }
+.street-vacancy-bar--high > div { background: #68a480; }
+.street-vacancy-bar--medium > div { background: #d3a04e; }
+.street-vacancy-bar--low > div { background: #ce7483; }
+.street-vacancy-bar--unknown { background: #ded9e3; }
+.street-empty { margin: 22px 0 12px; padding: 22px 14px; background: #faf8fc; border: 1px dashed #e5ddeb; border-radius: 11px; color: var(--muted); font-size: 12px; line-height: 1.8; }
+.street-empty-panel { display: flex; align-items: center; gap: 10px; font-size: 13px; color: var(--muted); }
+
+.quality-panel.card { background: #fffcf8; padding: 21px 23px; }
+.quality-toggle { display: flex; width: 100%; align-items: center; justify-content: space-between; gap: 15px; padding: 0; border: 0; background: none; text-align: left; }
+.quality-title { display: inline-flex; align-items: center; gap: 9px; color: var(--ink); font-size: 13px; font-weight: 600; }
+.quality-shield { width: 18px; height: 18px; flex-shrink: 0; color: #ad762a; }
+.quality-chevron { width: 17px; height: 17px; flex-shrink: 0; color: var(--muted); transition: transform 200ms; }
+.quality-chevron.is-open { transform: rotate(180deg); }
+.quality-explanation { margin: 11px 0 0; color: var(--muted); font-size: 12px; line-height: 1.8; }
+.quality-details { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 18px 25px; padding-top: 18px; margin: 17px 0 0; border-top: 1px solid #eee5da; animation: parking-details-enter 280ms ease both; }
+.quality-term { font-size: 10px; font-weight: 550; color: #8a735c; text-transform: uppercase; letter-spacing: .6px; }
+.quality-detail { margin: 5px 0 0; color: var(--ink-soft); font-size: 12px; line-height: 1.75; overflow-wrap: anywhere; }
+
+.parking-loading.card, .parking-unavailable.card { display: flex; align-items: flex-start; gap: 16px; padding: 28px; }
+.parking-loading.card { align-items: center; min-height: 150px; background: linear-gradient(120deg, #fff, #faf5ff); }
+.parking-status-icon { flex: 0 0 44px; display: grid; place-items: center; width: 44px; height: 44px; border-radius: 14px; color: var(--accent-dark); background: var(--accent-soft); }
+.parking-status-content { min-width: 0; }
+.parking-status-title { color: var(--ink); font-size: 17px; line-height: 1.5; font-weight: 600; margin: 0; }
+.parking-status-copy { color: var(--ink-soft); font-size: 13px; line-height: 1.8; margin: 6px 0 0; }
+.parking-status-detail { color: var(--muted); font-size: 11px; line-height: 1.8; margin: 4px 0 0; overflow-wrap: anywhere; }
+.parking-status-explanation { max-width: 750px; color: var(--muted); font-size: 12px; line-height: 1.8; margin: 16px 0 0; }
+.parking-unavailable.card { border-color: #edd3d8; background: #fff8f9; }
+.parking-unavailable .parking-status-icon { background: #fce9ee; color: #a54f62; }
+.parking-status-actions { display: flex; align-items: center; flex-wrap: wrap; gap: 10px; margin-top: 20px; }
+.parking-retry, .parking-source-link { display: inline-flex; align-items: center; justify-content: center; gap: 7px; border: 1px solid #ddd5e3; border-radius: 10px; min-height: 42px; padding: 9px 13px; font-size: 12px; font-weight: 550; transition: background 180ms, transform 180ms; }
+.parking-retry { background: #c34a25; border-color: #c34a25; color: #fff; }
+.parking-retry:hover { background: #a93e1e; transform: translateY(-1px); }
+.parking-source-link { background: #fff; color: var(--ink-soft); }
+.parking-source-link:hover { background: #faf6fc; }
+.parking-refresh-warning { padding: 12px 15px; border: 1px solid #edddbd; border-radius: 11px; color: #856022; background: #fff8e9; font-size: 12px; line-height: 1.7; margin: 0; }
+
+.parking-footer { display: grid; grid-template-columns: 1fr 1.15fr; gap: 26px 35px; margin-top: 30px; padding: 26px 2px 16px; border-top: 1px solid var(--border); color: var(--muted); }
+.parking-footer-heading { color: var(--ink-soft); font-size: 10px; font-weight: 600; text-transform: uppercase; letter-spacing: 1px; margin: 0 0 10px; }
+.parking-footer-copy, .parking-footer-limitations { color: var(--muted); font-size: 11px; line-height: 1.9; margin: 0; }
+.parking-footer-link { color: var(--accent-dark); text-decoration-thickness: 1px; text-underline-offset: 3px; }
+.parking-footer-link:hover { text-decoration-line: underline; }
+.parking-footer-external { display: inline; width: 11px; height: 11px; margin-left: 2px; vertical-align: baseline; }
+.parking-footer-limitations { list-style: disc; padding-left: 15px; }
+.parking-footer-limitations li + li { margin-top: 6px; }
+.parking-footer-note { grid-column: 1 / -1; border-top: 1px solid var(--border); padding-top: 17px; margin: 0; color: var(--muted); font-size: 10px; line-height: 1.85; }
+
+@keyframes parking-panel-arrive { from { opacity: 0; transform: translateY(12px); } to { opacity: 1; transform: translateY(0); } }
+@keyframes parking-value-enter { from { opacity: .5; transform: translateY(4px); } to { opacity: 1; transform: translateY(0); } }
+@keyframes parking-details-enter { from { opacity: .4; transform: translateY(-4px); } to { opacity: 1; transform: translateY(0); } }
+@keyframes parking-loading-spin { to { transform: rotate(360deg); } }
+.parking-loading-spin { animation: parking-loading-spin 1.2s linear infinite; }
+
+@media (max-width: 1100px) {
+  .parking-summary-tile.card { padding: 20px; }
+  .parking-summary-label { font-size: 12px; }
+  .parking-summary-detail { font-size: 11px; }
+  .freshness-banner.card { align-items: flex-start; }
+  .street-panel.card { padding: 20px 17px 10px; }
+  .street-row { gap: 9px; padding: 13px 8px; }
+}
+@media (max-width: 700px) {
+  .parking-summary-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; }
+  .parking-summary-tile--free { grid-column: 1 / -1; }
+  .parking-summary-tile.card { padding: 19px; }
+  .parking-summary-value { font-size: 37px; }
+  .parking-summary-tile--free .parking-summary-value { font-size: 48px; }
+  .parking-summary-label { gap: 8px; font-size: 12px; }
+  .parking-summary-icon { width: 32px; height: 32px; flex-basis: 32px; border-radius: 10px; }
+  .parking-summary-icon svg { width: 18px; height: 18px; }
+  .freshness-banner.card { flex-wrap: wrap; gap: 13px; padding: 17px; }
+  .freshness-icon { display: none; }
+  .freshness-status-line { row-gap: 8px; }
+  .freshness-copy { font-size: 11px; }
+  .freshness-action { margin-left: auto; }
+  .street-search input { font-size: 16px; }
+  .street-list { max-height: 490px; }
+  .street-row-title > span:first-child { font-size: 13px; }
+  .street-row-detail { font-size: 11px; }
+  .quality-panel.card { padding: 20px; }
+  .quality-details { gap: 17px; }
+  .parking-footer { grid-template-columns: 1fr; gap: 24px; padding-top: 24px; }
+  .parking-loading.card, .parking-unavailable.card { padding: 23px 19px; gap: 12px; }
+  .parking-status-title { font-size: 15px; }
+}
+@media (max-width: 400px) {
+  .parking-summary-grid { gap: 10px; }
+  .parking-summary-tile.card { padding: 17px 15px; }
+  .parking-summary-value { font-size: 34px; }
+  .parking-summary-label { align-items: flex-start; font-size: 11px; }
+  .parking-summary-icon { width: 29px; height: 29px; flex-basis: 29px; }
+  .parking-summary-detail { font-size: 11px; }
+  .street-panel.card { padding: 18px 15px 8px; }
+  .street-sorts button { padding: 7px 5px; font-size: 10px; }
+  .street-row { padding: 13px 6px; gap: 8px; }
+  .street-vacancy-bar { display: none; }
+  .quality-details { grid-template-columns: 1fr; }
+  .parking-status-icon { display: none; }
+  .parking-status-actions { align-items: stretch; }
+  .parking-status-actions > * { flex: 1 1 auto; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .parking-summary-tile.card, .parking-value-change, .quality-details, .parking-loading-spin { animation: none; }
+  .parking-summary-tile, .freshness-action, .street-search input, .street-sorts button, .street-row, .street-vacancy-bar > div, .quality-chevron, .parking-retry, .parking-source-link { transition: none; }
+  .parking-summary-tile:hover, .freshness-action:hover:not(:disabled), .parking-retry:hover { transform: none; }
+}

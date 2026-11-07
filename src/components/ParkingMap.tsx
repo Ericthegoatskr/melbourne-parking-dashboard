@@ -1,8 +1,10 @@
 import { useEffect, useRef } from 'react';
+import { LocateFixed, MapPinned } from 'lucide-react';
 import L from 'leaflet';
 import { mayClaimCurrent } from '../lib/freshness';
 import { describeStreetSignage } from '../lib/parkingModel';
 import type { FeedState, StreetAvailability } from '../lib/types';
+import './ParkingMap.css';
 
 const MELBOURNE_CBD: L.LatLngTuple = [-37.8136, 144.9631];
 
@@ -15,10 +17,15 @@ const MELBOURNE_CBD: L.LatLngTuple = [-37.8136, 144.9631];
  * whether a bay was free.
  */
 function colourFor(street: StreetAvailability): string {
-  if (street.vacancyRate === null) return '#64748b';
-  if (street.vacancyRate >= 0.3) return '#34d399';
-  if (street.vacancyRate >= 0.12) return '#fbbf24';
-  return '#fb7185';
+  if (street.vacancyRate === null) return '#817b89';
+  if (street.vacancyRate >= 0.3) return '#38805b';
+  if (street.vacancyRate >= 0.12) return '#b77a22';
+  return '#bf5b70';
+}
+
+function prefersReducedMotion(): boolean {
+  return typeof window.matchMedia === 'function'
+    && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 }
 
 interface Props {
@@ -32,6 +39,7 @@ export function ParkingMap({ streets, state, selected, onSelect }: Props) {
   const containerRef = useRef<HTMLDivElement>(null);
   const mapRef = useRef<L.Map | null>(null);
   const layerRef = useRef<L.LayerGroup | null>(null);
+  const markersRef = useRef(new Map<string, L.CircleMarker>());
   // Keep the latest callback without re-running the marker effect on each render.
   const onSelectRef = useRef(onSelect);
   onSelectRef.current = onSelect;
@@ -39,14 +47,18 @@ export function ParkingMap({ streets, state, selected, onSelect }: Props) {
   useEffect(() => {
     if (!containerRef.current || mapRef.current) return;
 
+    const reducedMotion = prefersReducedMotion();
     const map = L.map(containerRef.current, {
       center: MELBOURNE_CBD,
       zoom: 14,
       scrollWheelZoom: false,
+      zoomAnimation: !reducedMotion,
+      fadeAnimation: !reducedMotion,
+      markerZoomAnimation: !reducedMotion,
     });
 
     /*
-     * OpenStreetMap's own tiles, darkened with a CSS filter rather than
+     * OpenStreetMap's own tiles, softly desaturated with a CSS filter rather than
      * fetched from a themed tile service.
      *
      * The previous CARTO dark basemap now answers HTTP 200 with an
@@ -64,18 +76,29 @@ export function ParkingMap({ streets, state, selected, onSelect }: Props) {
 
     mapRef.current = map;
     layerRef.current = L.layerGroup().addTo(map);
+    const markers = markersRef.current;
+
+    // A responsive grid can resize this panel without a window resize event.
+    const observer = typeof ResizeObserver === 'undefined'
+      ? null
+      : new ResizeObserver(() => map.invalidateSize({ pan: false }));
+    observer?.observe(containerRef.current);
 
     return () => {
+      observer?.disconnect();
       map.remove();
       mapRef.current = null;
       layerRef.current = null;
+      markers.clear();
     };
   }, []);
 
   useEffect(() => {
     const layer = layerRef.current;
     if (!layer) return;
+    const openStreet = [...markersRef.current].find(([, marker]) => marker.isPopupOpen())?.[0];
     layer.clearLayers();
+    markersRef.current.clear();
 
     const current = mayClaimCurrent(state);
     const maxTotal = streets.reduce((max, s) => Math.max(max, s.total), 1);
@@ -88,8 +111,8 @@ export function ParkingMap({ streets, state, selected, onSelect }: Props) {
       const marker = L.circleMarker([street.lat, street.lon], {
         radius,
         color: colourFor(street),
-        weight: street.street === selected ? 3 : 1.5,
-        opacity: silent ? 0.55 : 0.9,
+        weight: 1.5,
+        opacity: silent ? 0.65 : 0.95,
         fillColor: colourFor(street),
         fillOpacity: silent ? 0 : current ? 0.45 : 0.2,
       });
@@ -106,25 +129,64 @@ export function ParkingMap({ streets, state, selected, onSelect }: Props) {
 
       marker.on('click', () => onSelectRef.current(street.street));
       marker.addTo(layer);
+      markersRef.current.set(street.street, marker);
+      if (street.street === openStreet) marker.openPopup();
     }
-  }, [streets, state, selected]);
+  }, [streets, state]);
+
+  // Selecting a circle must not recreate it and close its newly opened popup.
+  useEffect(() => {
+    for (const [street, marker] of markersRef.current) {
+      marker.setStyle({ weight: street === selected ? 3.5 : 1.5 });
+      if (street === selected) marker.bringToFront();
+    }
+  }, [selected, streets, state]);
 
   // Pan to a street chosen from the list.
   useEffect(() => {
     const map = mapRef.current;
     if (!map || !selected) return;
     const target = streets.find((street) => street.street === selected);
-    if (target) map.flyTo([target.lat, target.lon], Math.max(map.getZoom(), 16), { duration: 0.6 });
+    if (target) map.flyTo([target.lat, target.lon], Math.max(map.getZoom(), 16), {
+      duration: 0.6,
+      animate: !prefersReducedMotion(),
+    });
   }, [selected, streets]);
 
   return (
-    <section className="card h-full p-0">
+    <section className="card parking-map-card" aria-labelledby="parking-map-title">
+      <div className="parking-map-heading">
+        <div>
+          <h2 id="parking-map-title"><MapPinned size={18} aria-hidden /> Parking map</h2>
+          <p>Street-level view · City of Melbourne</p>
+        </div>
+        <button
+          type="button"
+          className="parking-map-reset"
+          onClick={() => {
+            onSelectRef.current(null);
+            mapRef.current?.closePopup().setView(MELBOURNE_CBD, 14, { animate: !prefersReducedMotion() });
+          }}
+        >
+          <LocateFixed size={15} aria-hidden /> Reset view
+        </button>
+      </div>
       <div
         ref={containerRef}
-        className="h-[420px] w-full overflow-hidden rounded-xl lg:h-full lg:min-h-[420px]"
+        className="parking-map-canvas"
         role="application"
         aria-label="Map of on-street parking availability by street"
       />
+      <div className="parking-map-key">
+        <p>{mayClaimCurrent(state) ? 'Share of reporting bays free' : 'Share free at last reading'}</p>
+        <ul aria-label="Map availability legend">
+          <li><i className="map-key-more" aria-hidden />30%+ free</li>
+          <li><i className="map-key-some" aria-hidden />12–&lt;30% free</li>
+          <li><i className="map-key-few" aria-hidden />&lt;12% free</li>
+          <li><i className="map-key-silent" aria-hidden />No signal</li>
+        </ul>
+        <small>Larger circles represent more sensor bays. Select a street for its reading and signs.</small>
+      </div>
     </section>
   );
 }

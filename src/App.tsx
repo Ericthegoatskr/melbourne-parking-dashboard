@@ -1,5 +1,5 @@
-import { useEffect, useMemo, useState } from 'react';
-import { CircleParking } from 'lucide-react';
+import { useEffect, useMemo, useRef, useState } from 'react';
+import { ArrowUpRight, CircleParking, Database, LayoutGrid, ListFilter, Map, Menu, ShieldCheck, X } from 'lucide-react';
 import { FreshnessBanner, FreshnessLegend } from './components/FreshnessBanner';
 import { SummaryCards } from './components/SummaryCards';
 import { StreetList } from './components/StreetList';
@@ -13,6 +13,7 @@ import {
 } from './components/StatusScreens';
 import { useParkingData } from './lib/useParkingData';
 import { ageMinutes } from './lib/freshness';
+import { formatMelbourneTime } from './lib/format';
 import {
   UNMAPPED_STREET,
   filterStreets,
@@ -22,6 +23,19 @@ import {
 } from './lib/parkingModel';
 import type { StreetSort } from './lib/parkingModel';
 import type { ZoneCrosswalk } from './lib/types';
+
+const DAILY_URL = 'https://ericthegoatskr.github.io/melbourne-daily/';
+const navigation = [
+  { id: 'overview', label: 'Overview', Icon: LayoutGrid },
+  { id: 'streets', label: 'Find a street', Icon: ListFilter },
+  { id: 'parking-map', label: 'Parking map', Icon: Map },
+  { id: 'quality', label: 'Data quality', Icon: ShieldCheck },
+  { id: 'sources', label: 'Sources & licence', Icon: Database },
+];
+function sectionFromHash() {
+  const id = window.location.hash.slice(1);
+  return navigation.some((item) => item.id === id) ? id : 'overview';
+}
 
 /**
  * Load the static zone -> street crosswalk.
@@ -63,6 +77,73 @@ export default function App() {
   const [sort, setSort] = useState<StreetSort>('most-vacant');
   const [query, setQuery] = useState('');
   const [selected, setSelected] = useState<string | null>(null);
+  const [active, setActive] = useState(sectionFromHash);
+  const [menuOpen, setMenuOpen] = useState(false);
+  const menuButton = useRef<HTMLButtonElement>(null);
+  const sidebar = useRef<HTMLElement>(null);
+
+  useEffect(() => {
+    const syncNavigation = () => setActive(sectionFromHash());
+    window.addEventListener('hashchange', syncNavigation);
+    return () => window.removeEventListener('hashchange', syncNavigation);
+  }, []);
+
+  useEffect(() => {
+    if (!menuOpen) return;
+    const previousOverflow = document.body.style.overflow;
+    document.body.style.overflow = 'hidden';
+    const closeOnDesktop = () => {
+      if (window.innerWidth > 760) setMenuOpen(false);
+    };
+    window.addEventListener('resize', closeOnDesktop);
+    const focusable = () => Array.from(
+      sidebar.current?.querySelectorAll<HTMLElement>('a[href], button:not([disabled])') ?? [],
+    ).filter((element) => element.getClientRects().length > 0);
+    // Wait until the drawer is visible and the opening click has completed.
+    const focusFrame = window.requestAnimationFrame(() => focusable()[0]?.focus());
+    const focusAfterReveal = window.setTimeout(() => {
+      if (!sidebar.current?.contains(document.activeElement)) focusable()[0]?.focus();
+    }, 260);
+    const keyboard = (event: KeyboardEvent) => {
+      if (event.key === 'Escape') {
+        setMenuOpen(false);
+        menuButton.current?.focus();
+      }
+      if (event.key === 'Tab') {
+        const items = focusable();
+        const first = items[0];
+        const last = items.at(-1);
+        if (!sidebar.current?.contains(document.activeElement)) {
+          event.preventDefault();
+          (event.shiftKey ? last : first)?.focus();
+        } else if (event.shiftKey && document.activeElement === first) {
+          event.preventDefault();
+          last?.focus();
+        } else if (!event.shiftKey && document.activeElement === last) {
+          event.preventDefault();
+          first?.focus();
+        }
+      }
+    };
+    document.addEventListener('keydown', keyboard);
+    return () => {
+      document.removeEventListener('keydown', keyboard);
+      window.removeEventListener('resize', closeOnDesktop);
+      window.cancelAnimationFrame(focusFrame);
+      window.clearTimeout(focusAfterReveal);
+      document.body.style.overflow = previousOverflow;
+    };
+  }, [menuOpen]);
+
+  const closeMenu = () => {
+    setMenuOpen(false);
+    menuButton.current?.focus();
+  };
+  const navigate = (id: string) => {
+    setActive(id);
+    setMenuOpen(false);
+    if (menuOpen) menuButton.current?.focus();
+  };
 
   const summary = useMemo(() => (snapshot ? summarise(snapshot) : null), [snapshot]);
 
@@ -83,27 +164,74 @@ export default function App() {
 
   // Recomputed on every freshness tick so the age in the banner keeps moving.
   const age = snapshot ? ageMinutes(snapshot.sourceTime, new Date()) : null;
+  const canExplore = snapshot !== null && state !== 'unavailable';
 
   return (
-    <div className="mx-auto min-h-screen w-full max-w-6xl px-4 py-6 sm:px-6 sm:py-10">
-      <header className="mb-6">
-        <div className="flex items-center gap-2 text-cyan-300">
-          <CircleParking className="h-5 w-5" aria-hidden />
-          <span className="text-xs font-semibold uppercase tracking-[0.16em]">
-            City of Melbourne open data
-          </span>
+    <div className="parking-shell">
+      <a className="skip-link" href="#main">Skip to content</a>
+      {menuOpen && <div className="parking-backdrop" aria-hidden="true" onClick={closeMenu} />}
+      <aside
+        ref={sidebar}
+        className={`parking-sidebar ${menuOpen ? 'is-open' : ''}`}
+        aria-label="Main navigation"
+        role={menuOpen ? 'dialog' : undefined}
+        aria-modal={menuOpen ? true : undefined}
+      >
+        {menuOpen && <button className="drawer-close" aria-label="Close navigation" onClick={closeMenu}><X size={20} /></button>}
+        <a className="brand" href="#overview" onClick={() => navigate('overview')}>
+          <span className="brand-mark">m<span>.</span></span>
+          <span>melbourne<span>parking<span className="brand-period">.</span></span></span>
+        </a>
+        <span className="sidebar-label">A LITTLE LESS CIRCLING.</span>
+        <nav className="parking-nav">
+          {navigation.filter(({ id }) => canExplore || id === 'overview' || id === 'sources').map(({ id, label, Icon }) => (
+            <a key={id} href={`#${id}`} className={active === id ? 'active' : ''}
+              aria-current={active === id ? 'location' : undefined} onClick={() => navigate(id)}>
+              <Icon className="nav-icon" size={18} aria-hidden="true" />
+              <span>{label}</span>
+            </a>
+          ))}
+        </nav>
+        <div className="sidebar-note">
+          <CircleParking size={25} aria-hidden="true" />
+          <strong>Your next stop, sorted.</strong>
+          <p>Explore the streets.<br />Check the signs.</p>
+          <span>CITY OF MELBOURNE</span>
         </div>
-        <h1 className="mt-2 text-3xl font-bold tracking-tight text-white sm:text-4xl">
-          Melbourne street parking
-        </h1>
-        <p className="mt-2 max-w-2xl text-slate-300">
-          How many on-street bays the council&rsquo;s sensors currently report as free, and how
-          much of that reading you can rely on. Sensors that have gone quiet are excluded rather
-          than counted as empty.
-        </p>
+        <div className="sidebar-bottom">
+          <a href={DAILY_URL}><LayoutGrid size={17} aria-hidden="true" />Melbourne Daily<ArrowUpRight size={14} aria-hidden="true" /></a>
+          <a href="https://github.com/Ericthegoatskr/melbourne-parking-dashboard" target="_blank" rel="noopener noreferrer">View on GitHub<ArrowUpRight size={14} aria-hidden="true" /><span className="sr-only"> (opens in a new tab)</span></a>
+          <span>THE MELBOURNE COLLECTION</span>
+        </div>
+      </aside>
+
+      <div className="parking-main-shell">
+      <header className="parking-topbar">
+        <div className="topbar-start">
+          <button ref={menuButton} className="menu-button" aria-label={menuOpen ? 'Close menu' : 'Open menu'} aria-expanded={menuOpen} onClick={() => setMenuOpen(!menuOpen)}>
+            {menuOpen ? <X size={21} /> : <Menu size={21} />}
+          </button>
+          <span className="parking-breadcrumb">Your city, at a glance<span>/</span><strong>Parking explorer</strong></span>
+        </div>
+        <div className="topbar-end">
+          <span className="local-clock">MEL {formatMelbourneTime(new Date())}</span>
+          <a className="series-link" href={DAILY_URL}>Melbourne Daily<ArrowUpRight size={14} aria-hidden="true" /></a>
+        </div>
       </header>
 
-      <main className="space-y-4">
+      <main id="main" className="parking-main">
+        <section id="overview" className="parking-intro">
+          <div className="intro-copy">
+            <span className="eyebrow"><CircleParking size={14} aria-hidden="true" />CITY OF MELBOURNE OPEN DATA</span>
+            <h1>Melbourne street parking<span>.</span></h1>
+            <p>Find your next spot, with a clearer picture of what is reporting.</p>
+          </div>
+          {canExplore
+            ? <a className="intro-actions" href="#parking-map" onClick={() => navigate('parking-map')}><Map size={17} aria-hidden="true" />Explore the map<ArrowUpRight size={16} aria-hidden="true" /></a>
+            : <a className="intro-actions" href="#sources" onClick={() => navigate('sources')}><Database size={17} aria-hidden="true" />Data sources<ArrowUpRight size={16} aria-hidden="true" /></a>}
+        </section>
+
+        <div className="parking-content">
         {loading && !snapshot && <LoadingScreen />}
 
         {!loading && (!snapshot || state === 'unavailable') && (
@@ -120,7 +248,7 @@ export default function App() {
               onRefresh={refresh}
             />
 
-            {rejection && rejection.code !== 'stale-regression' && (
+            {state !== 'unavailable' && rejection && rejection.code !== 'stale-regression' && (
               <RefreshWarning rejection={rejection} />
             )}
 
@@ -128,8 +256,12 @@ export default function App() {
               <>
                 <SummaryCards summary={summary} state={state} />
 
-                <div className="grid gap-4 lg:grid-cols-5">
-                  <div className="min-w-0 lg:col-span-3">
+                <div className="parking-section-heading">
+                  <div><span className="eyebrow">EXPLORE THE NEIGHBOURHOOD</span><h2>Streets worth a look</h2></div>
+                  <p>Choose a street to find it on the map.</p>
+                </div>
+                <div className="parking-workspace">
+                  <div className="street-column" id="streets">
                     <StreetList
                       streets={visibleStreets}
                       state={state}
@@ -141,7 +273,7 @@ export default function App() {
                       onSelect={setSelected}
                     />
                   </div>
-                  <div className="min-w-0 lg:col-span-2">
+                  <div className="map-column" id="parking-map">
                     <ParkingMap
                       streets={visibleStreets}
                       state={state}
@@ -151,20 +283,21 @@ export default function App() {
                   </div>
                 </div>
 
-                <DataQualityPanel
+                <div id="quality"><DataQualityPanel
                   summary={summary}
                   snapshot={snapshot}
                   unmappedBays={unmappedBays}
-                />
+                /></div>
               </>
             )}
 
             <FreshnessLegend />
           </>
         )}
+        </div>
+        <div id="sources"><Footer /></div>
       </main>
-
-      <Footer />
+      </div>
     </div>
   );
 }

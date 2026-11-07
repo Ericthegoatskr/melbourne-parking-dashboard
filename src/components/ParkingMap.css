@@ -1,0 +1,126 @@
+.card.parking-map-card {
+  padding: 0;
+  overflow: hidden;
+  isolation: isolate;
+  position: relative;
+  z-index: 0;
+}
+
+.parking-map-heading {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+  padding: 21px 22px 18px;
+}
+
+.parking-map-heading h2 {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  margin: 0;
+  font-size: 16px;
+  font-weight: 650;
+  letter-spacing: -.3px;
+  color: var(--ink);
+}
+
+.parking-map-heading h2 svg { color: var(--accent-dark); }
+.parking-map-heading p { margin: 5px 0 0; color: var(--muted); font-size: 11px; }
+
+.parking-map-reset {
+  display: inline-flex;
+  justify-content: center;
+  align-items: center;
+  flex-shrink: 0;
+  gap: 6px;
+  min-height: 36px;
+  padding: 7px 10px;
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  background: #fff;
+  color: var(--ink-soft);
+  font-size: 11px;
+  font-weight: 500;
+  transition: background 180ms, color 180ms;
+}
+.parking-map-reset:hover { background: var(--accent-soft); color: var(--accent-dark); }
+
+.parking-map-canvas {
+  width: 100%;
+  height: 620px;
+  min-height: 360px;
+  isolation: isolate;
+  z-index: 0;
+  border-block: 1px solid var(--border);
+}
+
+.parking-map-canvas.leaflet-container {
+  background: #eeeef1;
+  font-family: var(--font-ui);
+  color: var(--ink);
+}
+
+/* Only the base tiles are muted. Vacancy markers retain their semantic colours. */
+.parking-map-canvas .basemap-tiles { filter: saturate(.15) contrast(.93) brightness(1.035); }
+.parking-map-canvas .leaflet-popup-content-wrapper,
+.parking-map-canvas .leaflet-popup-tip { background: #fff; color: var(--ink); }
+.parking-map-canvas .leaflet-popup-content-wrapper {
+  border-radius: 14px;
+  box-shadow: 0 7px 25px #34254124;
+  border: 1px solid var(--border);
+}
+.parking-map-canvas .leaflet-popup-content { font-size: 12px; line-height: 1.75; margin: 15px 20px; }
+.parking-map-canvas .leaflet-popup-content strong { font-weight: 650; color: var(--ink); }
+.parking-map-canvas .leaflet-popup-content span { color: var(--ink-soft); }
+.parking-map-canvas a.leaflet-popup-close-button { color: var(--muted); top: 4px; right: 4px; }
+.parking-map-canvas .leaflet-control-zoom {
+  overflow: hidden;
+  border: 1px solid #ddd7e6;
+  border-radius: 10px;
+  box-shadow: 0 3px 12px #34254116;
+}
+.parking-map-canvas .leaflet-bar a {
+  background: #fff;
+  color: var(--ink-soft);
+  border-bottom-color: var(--border);
+  width: 34px;
+  height: 34px;
+  line-height: 34px;
+}
+.parking-map-canvas .leaflet-bar a:hover { background: var(--accent-soft); color: var(--accent-dark); }
+.parking-map-canvas .leaflet-bar a.leaflet-disabled { background: #f7f6fa; color: #aaa2b3; }
+.parking-map-canvas .leaflet-control-attribution { background: #fffffff0; color: var(--ink-soft); font-size: 10px; }
+.parking-map-canvas .leaflet-control-attribution a { color: #66477e; }
+.parking-map-canvas .leaflet-interactive:focus-visible { outline: none; stroke-width: 4px; stroke: var(--ink); }
+
+.parking-map-key { padding: 16px 22px 19px; background: #fff; }
+.parking-map-key > p { margin: 0 0 9px; color: var(--ink-soft); font-size: 11px; font-weight: 550; }
+.parking-map-key ul { display: flex; flex-wrap: wrap; gap: 8px 14px; list-style: none; padding: 0; margin: 0; }
+.parking-map-key li { display: inline-flex; gap: 5px; align-items: center; font-size: 10px; color: var(--ink-soft); }
+.parking-map-key i { display: inline-block; width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
+.map-key-more { background: #38805b; }
+.map-key-some { background: #b77a22; }
+.map-key-few { background: #bf5b70; }
+.map-key-silent { border: 1.5px solid #817b89; background: transparent; }
+.parking-map-key small { display: block; margin-top: 11px; color: var(--muted); font-size: 10px; line-height: 1.65; }
+
+@media (max-width: 1049px) {
+  .parking-map-canvas { height: 430px; }
+}
+@media (max-width: 600px) {
+  .parking-map-heading { padding: 18px 16px 15px; gap: 10px; }
+  .parking-map-heading h2 { font-size: 15px; gap: 7px; }
+  .parking-map-heading p { font-size: 10px; }
+  .parking-map-reset { padding: 7px 8px; font-size: 10px; gap: 5px; }
+  .parking-map-reset svg { width: 13px; }
+  .parking-map-canvas { height: 380px; }
+  .parking-map-key { padding: 15px 16px 17px; }
+  .parking-map-key ul { gap: 8px 12px; }
+  .parking-map-canvas .leaflet-control-attribution { font-size: 9px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .parking-map-reset,
+  .parking-map-canvas .leaflet-zoom-animated,
+  .parking-map-canvas.leaflet-fade-anim .leaflet-popup { transition: none !important; }
+}

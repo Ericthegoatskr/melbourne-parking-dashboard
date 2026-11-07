@@ -2,68 +2,61 @@ import { CarFront, CircleParking, SignalHigh } from 'lucide-react';
 import { formatCount, formatPercent } from '../lib/format';
 import { mayClaimCurrent } from '../lib/freshness';
 import type { CitySummary, FeedState } from '../lib/types';
+import './panels.css';
 
 interface Props {
   summary: CitySummary;
   state: FeedState;
 }
 
-/**
- * The headline answer.
- *
- * When the feed is not current the hero number keeps its value but loses every
- * present-tense word: it becomes "last reading", not "free now". The figure is
- * still true as a historical fact; the claim about *now* is what we withdraw.
- */
+/** The same reading loses every present-tense claim when it is no longer current. */
 export function SummaryCards({ summary, state }: Props) {
   const current = mayClaimCurrent(state);
 
   return (
-    <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
-      <section className="card border-cyan-400/20 bg-gradient-to-br from-cyan-500/10 to-transparent sm:col-span-2 lg:col-span-1">
-        <div className="flex items-center gap-2 text-sm font-medium text-cyan-200">
-          <CircleParking className="h-4 w-4" aria-hidden />
+    <div className={`parking-summary-grid ${current ? '' : 'parking-summary--historical'}`}>
+      <section className="card parking-summary-tile parking-summary-tile--free">
+        <div className="parking-summary-label">
+          <span className="parking-summary-icon"><CircleParking size={21} aria-hidden /></span>
           {current ? 'Bays free now' : 'Bays free at last reading'}
         </div>
-        <p className="tnum mt-2 text-5xl font-bold tracking-tight text-white">
-          {formatCount(summary.vacant)}
+        <p className="parking-summary-value tnum">
+          <span key={summary.vacant} className="parking-value-change">{formatCount(summary.vacant)}</span>
         </p>
-        <p className="mt-2 text-sm text-slate-300">
+        <p className="parking-summary-detail">
           of {formatCount(summary.reporting)} sensors reporting
           {summary.vacancyRate !== null && (
             <> · {formatPercent(summary.vacancyRate)} free</>
           )}
         </p>
         {!current && (
-          <p className="mt-2 text-xs font-medium text-orange-200">
-            Not a description of the street right now.
-          </p>
+          <p className="parking-summary-warning">Not a description of the street right now.</p>
         )}
       </section>
 
-      <section className="card">
-        <div className="flex items-center gap-2 text-sm font-medium text-slate-300">
-          <CarFront className="h-4 w-4" aria-hidden />
+      <section className="card parking-summary-tile parking-summary-tile--occupied">
+        <div className="parking-summary-label">
+          <span className="parking-summary-icon"><CarFront size={21} aria-hidden /></span>
           Occupied
         </div>
-        <p className="tnum mt-2 text-3xl font-semibold text-white">
-          {formatCount(summary.occupied)}
+        <p className="parking-summary-value tnum">
+          <span key={summary.occupied} className="parking-value-change">{formatCount(summary.occupied)}</span>
         </p>
-        <p className="mt-2 text-sm text-slate-400">
+        <p className="parking-summary-detail">
           {formatPercent(summary.reporting === 0 ? null : summary.occupied / summary.reporting)}{' '}
           of reporting bays
         </p>
       </section>
 
-      <section className="card">
-        <div className="flex items-center gap-2 text-sm font-medium text-slate-300">
-          <SignalHigh className="h-4 w-4" aria-hidden />
+      <section className="card parking-summary-tile parking-summary-tile--coverage">
+        <div className="parking-summary-label">
+          <span className="parking-summary-icon"><SignalHigh size={21} aria-hidden /></span>
           Sensor coverage
         </div>
-        <p className="tnum mt-2 text-3xl font-semibold text-white">
-          {formatPercent(summary.coverage, 1)}
+        <p className="parking-summary-value tnum">
+          <span key={summary.coverage} className="parking-value-change">{formatPercent(summary.coverage, 1)}</span>
         </p>
-        <p className="mt-2 text-sm text-slate-400">
+        <p className="parking-summary-detail">
           {formatCount(summary.notReporting)} of {formatCount(summary.total)} bays not reporting
         </p>
       </section>
