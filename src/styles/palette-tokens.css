@@ -95,27 +95,28 @@ html[data-page="home"] [data-entry="air"] {
   --palette-selection-line: #89b89a;
   --palette-icon: #dce8d7;
 }
+/* Classic PTV corporate red; mode colours are separate wayfinding roles. */
 html[data-page="transport"],
 html[data-page="home"] [data-entry="transport"] {
-  --palette-canvas: #252342;
-  --palette-panel: #343052;
-  --palette-hover: #454064;
-  --palette-border: #625b84;
-  --palette-text: #f3f0ff;
-  --palette-muted: #c5c0e4;
-  --palette-accent: #bfb2ff;
-  --palette-accent-hover: #d5cbff;
-  --palette-active: #494166;
-  --palette-active-text: #d5cbff;
-  --palette-ink: #2b2848;
-  --palette-ink-soft: #4d4769;
-  --palette-secondary: #62597b;
-  --palette-surface: #f3f0ff;
-  --palette-raised: #faf8ff;
-  --palette-subtle: #e4dff3;
-  --palette-line: #d4cbe6;
-  --palette-action: #5f439c;
-  --palette-selection: #e5d9ff;
-  --palette-selection-line: #b7a2d7;
-  --palette-icon: #e3ddef;
+  --palette-canvas: #202222;
+  --palette-panel: #303232;
+  --palette-hover: #3e4140;
+  --palette-border: #5b5e5d;
+  --palette-text: #ffffff;
+  --palette-muted: #c5c7c4;
+  --palette-accent: #d92b26;
+  --palette-accent-hover: #b9201c;
+  --palette-active: #492b29;
+  --palette-active-text: #ffa39f;
+  --palette-ink: #242626;
+  --palette-ink-soft: #414443;
+  --palette-secondary: #62655f;
+  --palette-surface: #f6f5f2;
+  --palette-raised: #ffffff;
+  --palette-subtle: #eaeae6;
+  --palette-line: #d4d5ce;
+  --palette-action: #b9201c;
+  --palette-selection: #fbe7e4;
+  --palette-selection-line: #b87670;
+  --palette-icon: #e6e7e1;
 }

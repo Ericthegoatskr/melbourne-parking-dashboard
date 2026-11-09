@@ -9,7 +9,7 @@ const palettes = {
   amber: { name: "Walnut & amber", label: "Walnut and amber colour theme", canvas: "#2c241b", surface: "#fff3df", accent: "#edbd69" },
   sunset: { name: "Sunset glow", label: "Sunset colour theme", canvas: "#210c22", surface: "#cc8b38", accent: "#ff542c" },
   forest: { name: "Forest & mint", label: "Forest and mint colour theme", canvas: "#102e29", surface: "#edf5e9", accent: "#9cdbbb" },
-  iris: { name: "Indigo & iris", label: "Indigo and iris colour theme", canvas: "#252342", surface: "#f3f0ff", accent: "#bfb2ff" },
+  iris: { name: "PTV red & charcoal", label: "PTV inspired red and charcoal theme", canvas: "#202222", surface: "#f6f5f2", accent: "#d92b26" },
 } as const;
 
 function initialTheme(): Theme {
